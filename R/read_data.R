@@ -3,6 +3,7 @@
 #' @param tables Character vector of tables to load
 #' @param path Directory containing .xpt files
 #' @return List containing each table as a data frame
+#' @export
 #' @examples
 #' \dontrun{
 #' haven::write_xpt(mtcars, file.path(tempdir(), "mtcars.xpt"))
@@ -24,6 +25,7 @@ read_data_files <- function(tables, path = ".") {
 #' @inheritParams read_data_files
 #' @param conn database connection
 #' @return List containing each table as a data frame
+#' @export
 #' @examples
 #' \dontrun{
 #' # setup
