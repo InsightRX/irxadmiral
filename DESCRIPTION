@@ -7,6 +7,10 @@ Authors@R: c(
     person("InsightRX", role = "cph")
   )
 Description: Provides functions to facilitate analyzing clinical tiral datasets.
+Imports:
+    DBI,
+    glue,
+    haven
 License: file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
