@@ -15,7 +15,9 @@ Imports:
     dplyr,
     tibble,
     lubridate,
-    admiral
+    admiral,
+    ggplot2,
+    patchwork
 Suggests:
     fs,
     mockery,

@@ -5,11 +5,14 @@
 \title{Get the data needed for model fitting and parse into NONMEM style
 format}
 \usage{
-get_data_for_modelfit(db)
+get_data_for_modelfit(db = NULL, path = NULL)
 }
 \arguments{
-\item{db}{list containing database connection details. Requires \code{host},
-\code{dbname}, \code{user}, \code{password}, and \code{port}}
+\item{db}{list with db connection information. If NULL, will try to read
+same data from xpt files in \code{path}}
+
+\item{path}{optional. If no \code{db} specified, will read tables from xpt
+files in folder \code{path}.}
 }
 \value{
 NONMEM style dataset as data.frame

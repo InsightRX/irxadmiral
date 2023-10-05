@@ -9,16 +9,16 @@ nlmixr2_pk_1cmt_oral_linear <- function() {
     eta_CL   ~ 0.3
     eta_V    ~ 0.3
     eta_ka   ~ 0.3
-    prop_sd <- 0.15
+    prop_sd <- 0.3
   })
   model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
-    # d/dt(A1) = -Ka*A1
-    # d/dt(A2) = -(CL/V)*A1 + Ka*A1
+    # d/dt(A1) = -ka*A1
+    # d/dt(A2) = -(CL/V)*A1 + ka*A1
     # Cp = A2 / V
-    # Cp ~ prop(prop_sd) + add(add_sd)
+    # Cp ~ prop(prop_sd)
     linCmt() ~ prop(prop_sd)
   })
 }

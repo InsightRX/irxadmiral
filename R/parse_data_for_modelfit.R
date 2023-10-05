@@ -14,9 +14,15 @@ parse_data_for_modelfit <- function(data) {
   ## For covariate analyses we also need the covariates (e.g. weight, etc).
   ## We'll pull those together in a single data file.
   
+  ## This code was adapted from an example on the admiral package website:
+  ## https://github.com/pharmaverse/admiral/blob/main/inst/templates/ad_adppk.R
+  
+  ## It was made more generic, e.g. to avoid hardcoded covariates as much as
+  ## possible. Still needs some work to make fully generic.
+  
   param_lookup <- data.frame(
-    PCTESTCD = c("XAN", "DOSE"),
-    PARAMCD = c("XAN", "DOSE"),
+    PCTESTCD = c("DRUGX", "DOSE"),
+    PARAMCD = c("DRUGX", "DOSE"),
     PARAM = c("concentration of DrugX", "DrugX Dose"),
     PARAMN = c(1, 2)
   )
@@ -24,6 +30,7 @@ parse_data_for_modelfit <- function(data) {
   # Get list of ADSL vars required for derivations
   adsl_vars <- admiral::exprs(TRTSDT, TRTSDTM, TRT01P, TRT01A)
   
+  ## Concentrations
   pc_dates <- data$pc %>%
     # Join ADSL with PC (need TRTSDT for ADY derivation)
     admiral::derive_vars_merged(
@@ -45,9 +52,10 @@ parse_data_for_modelfit <- function(data) {
     dplyr::mutate(
       EVID = 0,
       DRUG = PCTEST,
-      NFRLT = if_else(PCTPTNUM < 0, 0, PCTPTNUM), .after = USUBJID
+      NFRLT = dplyr::if_else(PCTPTNUM < 0, 0, PCTPTNUM), .after = USUBJID
     )
   
+  ## Doses
   ex_dates <- data$ex %>%
     admiral::derive_vars_merged(
       dataset_add = data$adsl,
@@ -76,7 +84,7 @@ parse_data_for_modelfit <- function(data) {
       NFRLT = 24 * (VISITDY - 1), .after = USUBJID
     ) %>%
     # Set missing end dates to start date
-    dplyr::mutate(AENDTM = case_when(
+    dplyr::mutate(AENDTM = dplyr::case_when(
       is.na(AENDTM) ~ ASTDTM,
       TRUE ~ AENDTM
     )) %>%
@@ -225,12 +233,6 @@ parse_data_for_modelfit <- function(data) {
         is.na(EXDOSE_prev) ~ EXDOSE_first,
         TRUE ~ EXDOSE_prev
       ),
-      # Derive Planned Dose
-      DOSEP = dplyr::case_when(
-        TRT01P == "DrugX High Dose" ~ 81,
-        TRT01P == "DrugX Low Dose" ~ 54,
-        TRT01P == "Placebo" ~ 0
-      ),
       # Derive PARAMCD
       PARAMCD = dplyr::case_when(
         EVID == 1 ~ "DOSE",
@@ -273,8 +275,8 @@ parse_data_for_modelfit <- function(data) {
         TRUE ~ PCSTRESU
       ),
       UDTC = lubridate::format_ISO8601(ADTM),
-      II = dplyr::if_else(EVID == 1, 1, 0),
-      SS = dplyr::if_else(EVID == 1, 1, 0)
+      II = 0, # TODO: original implementation was wrong
+      SS = 0, # TODO: original implementation was wrong
     )
   
   # ---- Add ASEQ ----
@@ -288,7 +290,7 @@ parse_data_for_modelfit <- function(data) {
       check_type = "error"
     ) %>%
     # Derive PARAM and PARAMN
-    admiral::derive_vars_merged(dataset_add = select(param_lookup, -PCTESTCD), by_vars = admiral::exprs(PARAMCD)) %>%
+    admiral::derive_vars_merged(dataset_add = dplyr::select(param_lookup, -PCTESTCD), by_vars = admiral::exprs(PARAMCD)) %>%
     dplyr::mutate(
       PROJID = DRUG,
       PROJIDN = 1
@@ -315,60 +317,28 @@ parse_data_for_modelfit <- function(data) {
         SEX == "F" ~ 2,
         TRUE ~ 3
       ),
-      RACEN = dplyr::case_when(
-        RACE == "AMERICAN INDIAN OR ALASKA NATIVE" ~ 1,
-        RACE == "ASIAN" ~ 2,
-        RACE == "BLACK OR AFRICAN AMERICAN" ~ 3,
-        RACE == "NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER" ~ 4,
-        RACE == "WHITE" ~ 5,
-        TRUE ~ 6
-      ),
-      ETHNICN = dplyr::case_when(
-        ETHNIC == "HISPANIC OR LATINO" ~ 1,
-        ETHNIC == "NOT HISPANIC OR LATINO" ~ 2,
-        TRUE ~ 3
-      ),
-      ARMN = dplyr::case_when(
-        ARM == "Placebo" ~ 0,
-        ARM == "Xanomeline Low Dose" ~ 1,
-        ARM == "Xanomeline High Dose" ~ 2,
-        TRUE ~ 3
-      ),
-      ACTARMN = dplyr::case_when(
-        ACTARM == "Placebo" ~ 0,
-        ACTARM == "Xanomeline Low Dose" ~ 1,
-        ACTARM == "Xanomeline High Dose" ~ 2,
-        TRUE ~ 3
-      ),
+      ROUTE = "oral",    # TODO: hardcoded for now
+      ROUTEN = 1,        # .
+      FORM = "tablet",   # .
+      FORMN = 1,         # /TODO
+    )
+  categorical_vars <- c("RACE", "ETHNIC", "ARM", "ACTARM", "COUNTRY")
+  covar[paste0(categorical_vars, "N")] <- data.matrix(covar[, categorical_vars])
+  covar <- covar %>%
+    dplyr::mutate(
       COHORT = ARMN,
-      COHORTC = ARM,
-      ROUTE = unique(data$ex$EXROUTE),
-      ROUTEN = dplyr::case_when(
-        ROUTE == "TRANSDERMAL" ~ 3,
-        TRUE ~ NA_real_
-      ),
-      FORM = unique(data$ex$EXDOSFRM),
-      FORMN = dplyr::case_when(
-        FORM == "PATCH" ~ 3,
-        TRUE ~ 4
-      ),
-      COUNTRYN = dplyr::case_when(
-        COUNTRY == "USA" ~ 1,
-        COUNTRY == "CAN" ~ 2,
-        COUNTRY == "GBR" ~ 3
-      ),
-      REGION1N = COUNTRYN,
+      COHORTC = ARM
     ) %>%
     dplyr::select(
       STUDYID, STUDYIDN, SITEID, SITEIDN, USUBJID, USUBJIDN,
       SUBJID, SUBJIDN, AGE, SEX, SEXN, COHORT, COHORTC, ROUTE, ROUTEN,
-      RACE, RACEN, ETHNIC, ETHNICN, FORM, FORMN, COUNTRY, COUNTRYN,
-      REGION1, REGION1N
+      RACE, RACEN, ETHNIC, ETHNICN, FORM, FORMN, COUNTRY, COUNTRYN
     )
   
   #---- Derive additional baselines from VS and LB ----
+  numeric_vars <- c("CREAT", "ALT", "AST", "BILI") ## TODO: fairly generic, but might not always be available or might include others
   labsbl <- data$lb %>%
-    dplyr::filter(LBBLFL == "Y" & LBTESTCD %in% c("CREAT", "ALT", "AST", "BILI")) %>%
+    dplyr::filter(LBBLFL == "Y" & LBTESTCD %in% numeric_vars) %>%
     dplyr::mutate(LBTESTCDB = paste0(LBTESTCD, "BL")) %>%
     dplyr::select(STUDYID, USUBJID, LBTESTCDB, LBSTRESN)
   
@@ -416,16 +386,13 @@ parse_data_for_modelfit <- function(data) {
       by_vars = admiral::exprs(STUDYID, USUBJID)
     ) %>%
     dplyr::arrange(STUDYIDN, USUBJIDN, AFRLT, EVID) %>%
-    dplyr::mutate(RECSEQ = row_number())
+    dplyr::mutate(RECSEQ = dplyr::row_number())
   
   poppk_data <- adppk %>% # select the variables we need from the data
     dplyr::select(
       ID = SUBJID, TIME = NFRLT, 
       DV, MDV, EVID, SS, II,
       AMT, SEXN, AGE, WTBL, SITEID
-    ) %>%
-    dplyr::mutate(
-      RATE = AMT/6
     )
   
   poppk_data

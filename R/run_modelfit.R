@@ -32,15 +32,19 @@ run_modelfit <- function(
   
   ## read model file and source
   model <- get(paste0("nlmixr2_pk_", n_cmt, "cmt_", route, "_linear"))
-  
+
   ## fit model to data
-  fit <- nlmixr2(
+  fit <- nlmixr2::nlmixr2(
     model, 
     data,
-    est = "saem"
+    est = "saem",
+    nlmixr2::saemControl(print=50),
+    nlmixr2::tableControl(cwres=TRUE, npde=TRUE)
   )
   
   ## save fit object to file
   saveRDS(fit, path)
+  
+  return(fit)
   
 }
