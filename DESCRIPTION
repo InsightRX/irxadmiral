@@ -6,11 +6,16 @@ Authors@R: c(
     person("Kara", "Woo", email = "kara@insight-rx.com", role = c("aut")),
     person("InsightRX", role = "cph")
   )
-Description: Provides functions to facilitate analyzing clinical trial datasets.
+Description: Provides functions to facilitate automated analysis of clinical 
+    trial datasets.
 Imports:
     DBI,
     glue,
-    haven
+    haven,
+    dplyr,
+    tibble,
+    lubridate,
+    admiral
 Suggests:
     fs,
     mockery,
