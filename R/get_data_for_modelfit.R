@@ -5,6 +5,8 @@
 #' 
 #' @returns NONMEM style dataset as data.frame
 #'
+#' @export
+#' 
 get_data_for_modelfit <- function(
   db
 ) {

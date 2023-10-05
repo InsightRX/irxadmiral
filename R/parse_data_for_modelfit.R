@@ -29,7 +29,7 @@ parse_data_for_modelfit <- function(data) {
     admiral::derive_vars_merged(
       dataset_add = data$adsl,
       new_vars = adsl_vars,
-      by_vars = exprs(STUDYID, USUBJID)
+      by_vars = admiral::exprs(STUDYID, USUBJID)
     ) %>%
     # Derive analysis date/time
     # Impute missing time to 00:00:00
@@ -39,8 +39,8 @@ parse_data_for_modelfit <- function(data) {
       time_imputation = "00:00:00"
     ) %>%
     # Derive dates and times from date/times
-    admiral::derive_vars_dtm_to_dt(exprs(ADTM)) %>%
-    admiral::derive_vars_dtm_to_tm(exprs(ADTM)) %>%
+    admiral::derive_vars_dtm_to_dt(admiral::exprs(ADTM)) %>%
+    admiral::derive_vars_dtm_to_tm(admiral::exprs(ADTM)) %>%
     # Derive event ID and nominal relative time from first dose (NFRLT)
     dplyr::mutate(
       EVID = 0,
@@ -52,7 +52,7 @@ parse_data_for_modelfit <- function(data) {
     admiral::derive_vars_merged(
       dataset_add = data$adsl,
       new_vars = adsl_vars,
-      by_vars = exprs(STUDYID, USUBJID)
+      by_vars = admiral::exprs(STUDYID, USUBJID)
     ) %>%
     # Keep records with nonzero dose
     dplyr::filter(EXDOSE > 0) %>%
@@ -81,8 +81,8 @@ parse_data_for_modelfit <- function(data) {
       TRUE ~ AENDTM
     )) %>%
     # Derive dates from date/times
-    admiral::derive_vars_dtm_to_dt(exprs(ASTDTM)) %>%
-    admiral::derive_vars_dtm_to_dt(exprs(AENDTM))
+    admiral::derive_vars_dtm_to_dt(admiral::exprs(ASTDTM)) %>%
+    admiral::derive_vars_dtm_to_dt(admiral::exprs(AENDTM))
   
   ex_exp <- ex_dates %>%
     admiral::create_single_dose_dataset(
@@ -92,9 +92,9 @@ parse_data_for_modelfit <- function(data) {
       end_date = AENDT,
       end_datetime = AENDTM,
       nominal_time = NFRLT,
-      lookup_table = dose_freq_lookup,
+      lookup_table = admiral::dose_freq_lookup,
       lookup_column = CDISC_VALUE,
-      keep_source_vars = exprs(
+      keep_source_vars = admiral::exprs(
         STUDYID, USUBJID, EVID, EXDOSFRQ, EXDOSFRM,
         NFRLT, EXDOSE, EXDOSU, EXTRT, ASTDT, ASTDTM, AENDT, AENDTM,
         VISIT, VISITNUM, VISITDY,
@@ -111,10 +111,10 @@ parse_data_for_modelfit <- function(data) {
       DRUG = EXTRT
     ) %>%
     # Derive dates and times from datetimes
-    admiral::derive_vars_dtm_to_dt(exprs(ADTM)) %>%
-    admiral::derive_vars_dtm_to_tm(exprs(ADTM)) %>%
-    admiral::derive_vars_dtm_to_tm(exprs(ASTDTM)) %>%
-    admiral::derive_vars_dtm_to_tm(exprs(AENDTM))
+    admiral::derive_vars_dtm_to_dt(admiral::exprs(ADTM)) %>%
+    admiral::derive_vars_dtm_to_tm(admiral::exprs(ADTM)) %>%
+    admiral::derive_vars_dtm_to_tm(admiral::exprs(ASTDTM)) %>%
+    admiral::derive_vars_dtm_to_tm(admiral::exprs(AENDTM))
   
   
   # ---- Find first dose per treatment per subject ----
@@ -124,10 +124,10 @@ parse_data_for_modelfit <- function(data) {
     admiral::derive_vars_merged(
       dataset_add = ex_exp,
       filter_add = (!is.na(ADTM)),
-      new_vars = exprs(FANLDTM = ADTM, EXDOSE_first = EXDOSE),
-      order = exprs(ADTM, EXSEQ),
+      new_vars = admiral::exprs(FANLDTM = ADTM, EXDOSE_first = EXDOSE),
+      order = admiral::exprs(ADTM, EXSEQ),
       mode = "first",
-      by_vars = exprs(STUDYID, USUBJID, DRUG)
+      by_vars = admiral::exprs(STUDYID, USUBJID, DRUG)
     ) %>%
     dplyr::filter(!is.na(FANLDTM)) %>%
     # Derive AVISIT based on nominal relative time
@@ -142,13 +142,13 @@ parse_data_for_modelfit <- function(data) {
   adppk_prev <- adppk_first_dose %>%
     admiral::derive_vars_joined(
       dataset_add = ex_exp,
-      by_vars = exprs(USUBJID),
-      order = exprs(ADTM),
-      new_vars = exprs(
+      by_vars = admiral::exprs(USUBJID),
+      order = admiral::exprs(ADTM),
+      new_vars = admiral::exprs(
         ADTM_prev = ADTM, EXDOSE_prev = EXDOSE, AVISIT_prev = AVISIT,
         AENDTM_prev = AENDTM
       ),
-      join_vars = exprs(ADTM),
+      join_vars = admiral::exprs(ADTM),
       filter_add = NULL,
       filter_join = ADTM > ADTM.join,
       mode = "last",
@@ -159,10 +159,10 @@ parse_data_for_modelfit <- function(data) {
   adppk_nom_prev <- adppk_prev %>%
     admiral::derive_vars_joined(
       dataset_add = ex_exp,
-      by_vars = exprs(USUBJID),
-      order = exprs(NFRLT),
-      new_vars = exprs(NFRLT_prev = NFRLT),
-      join_vars = exprs(NFRLT),
+      by_vars = admiral::exprs(USUBJID),
+      order = admiral::exprs(NFRLT),
+      new_vars = admiral::exprs(NFRLT_prev = NFRLT),
+      join_vars = admiral::exprs(NFRLT),
       filter_add = NULL,
       filter_join = NFRLT > NFRLT.join,
       mode = "last",
@@ -283,12 +283,12 @@ parse_data_for_modelfit <- function(data) {
     # Calculate ASEQ
     admiral::derive_var_obs_number(
       new_var = ASEQ,
-      by_vars = exprs(STUDYID, USUBJID),
-      order = exprs(AFRLT, EVID),
+      by_vars = admiral::exprs(STUDYID, USUBJID),
+      order = admiral::exprs(AFRLT, EVID),
       check_type = "error"
     ) %>%
     # Derive PARAM and PARAMN
-    admiral::derive_vars_merged(dataset_add = select(param_lookup, -PCTESTCD), by_vars = exprs(PARAMCD)) %>%
+    admiral::derive_vars_merged(dataset_add = select(param_lookup, -PCTESTCD), by_vars = admiral::exprs(PARAMCD)) %>%
     dplyr::mutate(
       PROJID = DRUG,
       PROJIDN = 1
@@ -306,16 +306,16 @@ parse_data_for_modelfit <- function(data) {
   # Include numeric values for STUDYIDN, USUBJIDN, SEXN, RACEN etc.
   covar <- data$adsl %>%
     dplyr::mutate(
-      STUDYIDN = as.numeric(word(USUBJID, 1, sep = fixed("-"))),
-      SITEIDN = as.numeric(word(USUBJID, 2, sep = fixed("-"))),
-      USUBJIDN = as.numeric(word(USUBJID, 3, sep = fixed("-"))),
+      STUDYIDN = as.numeric(stringr::word(USUBJID, 1, sep = stringr::fixed("-"))),
+      SITEIDN = as.numeric(stringr::word(USUBJID, 2, sep = stringr::fixed("-"))),
+      USUBJIDN = as.numeric(stringr::word(USUBJID, 3, sep = stringr::fixed("-"))),
       SUBJIDN = as.numeric(SUBJID),
-      SEXN = case_when(
+      SEXN = dplyr::case_when(
         SEX == "M" ~ 1,
         SEX == "F" ~ 2,
         TRUE ~ 3
       ),
-      RACEN = case_when(
+      RACEN = dplyr::case_when(
         RACE == "AMERICAN INDIAN OR ALASKA NATIVE" ~ 1,
         RACE == "ASIAN" ~ 2,
         RACE == "BLACK OR AFRICAN AMERICAN" ~ 3,
@@ -323,18 +323,18 @@ parse_data_for_modelfit <- function(data) {
         RACE == "WHITE" ~ 5,
         TRUE ~ 6
       ),
-      ETHNICN = case_when(
+      ETHNICN = dplyr::case_when(
         ETHNIC == "HISPANIC OR LATINO" ~ 1,
         ETHNIC == "NOT HISPANIC OR LATINO" ~ 2,
         TRUE ~ 3
       ),
-      ARMN = case_when(
+      ARMN = dplyr::case_when(
         ARM == "Placebo" ~ 0,
         ARM == "Xanomeline Low Dose" ~ 1,
         ARM == "Xanomeline High Dose" ~ 2,
         TRUE ~ 3
       ),
-      ACTARMN = case_when(
+      ACTARMN = dplyr::case_when(
         ACTARM == "Placebo" ~ 0,
         ACTARM == "Xanomeline Low Dose" ~ 1,
         ACTARM == "Xanomeline High Dose" ~ 2,
@@ -343,16 +343,16 @@ parse_data_for_modelfit <- function(data) {
       COHORT = ARMN,
       COHORTC = ARM,
       ROUTE = unique(data$ex$EXROUTE),
-      ROUTEN = case_when(
+      ROUTEN = dplyr::case_when(
         ROUTE == "TRANSDERMAL" ~ 3,
         TRUE ~ NA_real_
       ),
       FORM = unique(data$ex$EXDOSFRM),
-      FORMN = case_when(
+      FORMN = dplyr::case_when(
         FORM == "PATCH" ~ 3,
         TRUE ~ 4
       ),
-      COUNTRYN = case_when(
+      COUNTRYN = dplyr::case_when(
         COUNTRY == "USA" ~ 1,
         COUNTRY == "CAN" ~ 2,
         COUNTRY == "GBR" ~ 3
@@ -376,18 +376,18 @@ parse_data_for_modelfit <- function(data) {
     admiral::derive_vars_merged(
       dataset_add = data$vs,
       filter_add = VSTESTCD == "HEIGHT",
-      by_vars = exprs(STUDYID, USUBJID),
-      new_vars = exprs(HTBL = VSSTRESN)
+      by_vars = admiral::exprs(STUDYID, USUBJID),
+      new_vars = admiral::exprs(HTBL = VSSTRESN)
     ) %>%
     admiral::derive_vars_merged(
       dataset_add = data$vs,
       filter_add = VSTESTCD == "WEIGHT" & VSBLFL == "Y",
-      by_vars = exprs(STUDYID, USUBJID),
-      new_vars = exprs(WTBL = VSSTRESN)
+      by_vars = admiral::exprs(STUDYID, USUBJID),
+      new_vars = admiral::exprs(WTBL = VSSTRESN)
     ) %>%
     admiral::derive_vars_transposed(
       dataset_merge = labsbl,
-      by_vars = exprs(STUDYID, USUBJID),
+      by_vars = admiral::exprs(STUDYID, USUBJID),
       key_var = LBTESTCDB,
       value_var = LBSTRESN
     ) %>%
@@ -413,7 +413,7 @@ parse_data_for_modelfit <- function(data) {
   adppk <- adppk_aseq %>%
     admiral::derive_vars_merged(
       dataset_add = covar_vslb,
-      by_vars = exprs(STUDYID, USUBJID)
+      by_vars = admiral::exprs(STUDYID, USUBJID)
     ) %>%
     dplyr::arrange(STUDYIDN, USUBJIDN, AFRLT, EVID) %>%
     dplyr::mutate(RECSEQ = row_number())

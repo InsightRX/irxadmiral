@@ -12,6 +12,7 @@
 #' @param path path to file to store output object from fit.
 #' 
 #' @return NULL
+#' @export
 #' 
 #' @examples
 #' 
@@ -30,19 +31,12 @@ run_modelfit <- function(
 ) {
   
   ## read model file and source
-  modelfile <- system.file(
-    package = "irxadmiral", 
-    paste0("models/nlmixr2/pk_", n_cmt, "_", route, "linear.R")
-  )
-  if(!file.exists(modelfile)) {
-    stop("Sorry, requested model is not available.")
-  }
-  model <- source(modelfile)$value
-
+  model <- get(paste0("nlmixr2_pk_", n_cmt, "cmt_", route, "_linear"))
+  
   ## fit model to data
   fit <- nlmixr2(
     model, 
-    poppk_data,
+    data,
     est = "saem"
   )
   
