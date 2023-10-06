@@ -297,11 +297,11 @@ parse_data_for_modelfit <- function(data) {
     ) %>%
     # Remove temporary variables
     dplyr::select(
-      -DOMAIN, -starts_with("min"), -starts_with("max"), -starts_with("EX"),
-      -starts_with("PC"), -ends_with("first"), -ends_with("prev"),
-      -ends_with("DTM"), -ends_with("DT"), -ends_with("TM"), -starts_with("VISIT"),
-      -starts_with("AVISIT"), -starts_with("PARAM"),
-      -ends_with("TMF"), -starts_with("TRT"), -starts_with("ATPT"), -DRUG
+      -DOMAIN, -tidyselect::starts_with("min"), -tidyselect::starts_with("max"), -tidyselect::starts_with("EX"),
+      -tidyselect::starts_with("PC"), -tidyselect::ends_with("first"), -tidyselect::ends_with("prev"),
+      -tidyselect::ends_with("DTM"), -tidyselect::ends_with("DT"), -tidyselect::ends_with("TM"), -tidyselect::starts_with("VISIT"),
+      -tidyselect::starts_with("AVISIT"), -tidyselect::starts_with("PARAM"),
+      -tidyselect::ends_with("TMF"), -tidyselect::starts_with("TRT"), -tidyselect::starts_with("ATPT"), -DRUG
     )
   
   #---- Derive Covariates ----

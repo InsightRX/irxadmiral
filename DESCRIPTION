@@ -20,6 +20,7 @@ Imports:
     nlmixr2,
     stringr,
     tidyr,
+    tidyselect,
     RPostgres
 Suggests:
     fs,
