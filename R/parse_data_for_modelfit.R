@@ -14,11 +14,13 @@ parse_data_for_modelfit <- function(data) {
   ## For covariate analyses we also need the covariates (e.g. weight, etc).
   ## We'll pull those together in a single data file.
   
-  ## This code was adapted from an example on the admiral package website:
-  ## https://github.com/pharmaverse/admiral/blob/main/inst/templates/ad_adppk.R
-  
-  ## It was made more generic, e.g. to avoid hardcoded covariates as much as
+  ## This code was adapted from an example on the admiral package website.
+  ## It was made more generic, e.g. avoid hardcoded covariates as much as
   ## possible. Still needs some work to make fully generic.
+  
+  for(key in names(data)) { # admiral package is written assuming uppercase column names
+    names(data[[key]]) <- toupper(names(data[[key]]))
+  }
   
   param_lookup <- data.frame(
     PCTESTCD = c("DRUGX", "DOSE"),
@@ -365,7 +367,7 @@ parse_data_for_modelfit <- function(data) {
       BMIBL = admiral::compute_bmi(height = HTBL, weight = WTBL),
       BSABL = admiral::compute_bsa(
         height = HTBL,
-        weight = HTBL,
+        weight = WTBL,
         method = "Mosteller"
       ),
       CRCLBL = admiral::compute_egfr(
