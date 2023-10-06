@@ -369,7 +369,7 @@ parse_data_for_modelfit <- function(data) {
         method = "Mosteller"
       ),
       CRCLBL = admiral::compute_egfr(
-        creat = CREATBL, creatu = "SI", age = AGE, wt = WTBL, sex = SEX,
+        creat = CREATBL, creatu = "SI", age = AGE, weight = WTBL, sex = SEX,
         method = "CRCL"
       ),
       EGFRBL = admiral::compute_egfr(

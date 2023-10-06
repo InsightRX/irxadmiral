@@ -13,11 +13,14 @@ Imports:
     glue,
     haven,
     dplyr,
-    tibble,
     lubridate,
     admiral,
     ggplot2,
-    patchwork
+    patchwork,
+    nlmixr2,
+    stringr,
+    tidyr,
+    RPostgres
 Suggests:
     fs,
     mockery,

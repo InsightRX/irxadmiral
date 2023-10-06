@@ -24,11 +24,11 @@ run_sql_query <- function(
   query
 ) {
   conn <- create_db_connection(db) # for now, we will not try to persist the connection
+  on.exit(DBI::dbDisconnect(conn))
   result <- DBI::dbGetQuery(
     conn = conn, 
     statement = query
   )
-  DBI::dbDisconnect(conn)
   return(result)
 }
 
