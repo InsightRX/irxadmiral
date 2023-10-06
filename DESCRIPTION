@@ -1,5 +1,5 @@
 Package: irxadmiral
-Title: Analyze Clinical Trial Datasets
+Title: Functionality for automated analysis of clinical trial data
 Version: 0.0.0.9000
 Authors@R: c(
     person("Ron", "Keizer", email = "ron@insight-rx.com", role = c("cre", "aut")),
@@ -7,7 +7,7 @@ Authors@R: c(
     person("InsightRX", role = "cph")
   )
 Description: Provides functions to facilitate automated analysis of clinical 
-    trial datasets.
+    trial datasets, based on the admiral package for parsing SDTM datasets.
 Imports:
     DBI,
     glue,
