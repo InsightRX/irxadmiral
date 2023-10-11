@@ -32,7 +32,7 @@ basic_gof_plot <- function(
       ggplot2::facet_wrap(~name, scales = "free") +
       ggplot2::geom_smooth(method = "lm") +
       ggplot2::xlab("") +
-      ggplot2::ylab("CWRES")
+      ggplot2::ylab("NPDE")
   p_comb <- patchwork::wrap_plots(p1, p2, ncol = 1)
   if(!is.null(path)) {
     ggplot2::ggsave(filename = path, plot = p_comb)

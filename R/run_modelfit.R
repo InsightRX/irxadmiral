@@ -10,6 +10,7 @@
 #' @param n_cmt number of compartments for the population PK model
 #' @param route administration route, either `"oral"` or `"iv"`
 #' @param path path to file to store output object from fit.
+#' @param n_iterations number of SAEM
 #' 
 #' @return NULL
 #' @export
@@ -38,7 +39,7 @@ run_modelfit <- function(
     model, 
     data,
     est = "saem",
-    nlmixr2::saemControl(print=50),
+    nlmixr2::saemControl(print=50, nBurn=100, nEm=150), # limit to 250 iterations for now
     nlmixr2::tableControl(cwres=TRUE, npde=TRUE)
   )
   
