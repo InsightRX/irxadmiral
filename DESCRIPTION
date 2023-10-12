@@ -21,7 +21,8 @@ Imports:
     stringr,
     tidyr,
     tidyselect,
-    RPostgres
+    RPostgres,
+    IQnca
 Suggests:
     fs,
     mockery,
