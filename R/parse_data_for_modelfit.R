@@ -1,6 +1,9 @@
 #' Parse data into NONMEM-style dataset
 #' 
-#' @returns data.frame with population PK input data
+#' @returns data.frame with population PK input data in NONMEM-style
+#' format. It will also add the non-standard columns ROUTE ("oral", "iv") and 
+#' FORM (formulation: "tablet", "suspension", "patch", "infusion", etc.) with 
+#' values for each dose and NA for observations.
 #' 
 #' @param data list containing SDTM tables as data.frames
 #' 
@@ -107,7 +110,7 @@ parse_data_for_modelfit <- function(data) {
       keep_source_vars = admiral::exprs(
         STUDYID, USUBJID, EVID, EXDOSFRQ, EXDOSFRM,
         NFRLT, EXDOSE, EXDOSU, EXTRT, ASTDT, ASTDTM, AENDT, AENDTM,
-        VISIT, VISITNUM, VISITDY,
+        VISIT, VISITNUM, VISITDY, EXROUTE, EXDOSFRM,
         TRT01A, TRT01P, DOMAIN, EXSEQ, !!!adsl_vars
       )
     ) %>%
@@ -126,7 +129,6 @@ parse_data_for_modelfit <- function(data) {
     admiral::derive_vars_dtm_to_tm(admiral::exprs(ASTDTM)) %>%
     admiral::derive_vars_dtm_to_tm(admiral::exprs(AENDTM))
   
-  
   # ---- Find first dose per treatment per subject ----
   # ---- Join with ADPPK data and keep only subjects with dosing ----
   
@@ -134,7 +136,10 @@ parse_data_for_modelfit <- function(data) {
     admiral::derive_vars_merged(
       dataset_add = ex_exp,
       filter_add = (!is.na(ADTM)),
-      new_vars = admiral::exprs(FANLDTM = ADTM, EXDOSE_first = EXDOSE),
+      new_vars = admiral::exprs(
+        FANLDTM = ADTM, 
+        EXDOSE_first = EXDOSE
+      ),
       order = admiral::exprs(ADTM, EXSEQ),
       mode = "first",
       by_vars = admiral::exprs(STUDYID, USUBJID, DRUG)
@@ -155,7 +160,9 @@ parse_data_for_modelfit <- function(data) {
       by_vars = admiral::exprs(USUBJID),
       order = admiral::exprs(ADTM),
       new_vars = admiral::exprs(
-        ADTM_prev = ADTM, EXDOSE_prev = EXDOSE, AVISIT_prev = AVISIT,
+        ADTM_prev = ADTM, 
+        EXDOSE_prev = EXDOSE, 
+        AVISIT_prev = AVISIT,
         AENDTM_prev = AENDTM
       ),
       join_vars = admiral::exprs(ADTM),
@@ -221,6 +228,10 @@ parse_data_for_modelfit <- function(data) {
         is.na(NFRLT_prev) ~ NFRLT - min_NFRLT,
         TRUE ~ NFRLT - NFRLT_prev
       )
+    ) %>%
+    dplyr::mutate(
+      ROUTE = EXROUTE, 
+      FORM = EXDOSFRM
     )
   
   # ---- Derive Analysis Variables ----
@@ -318,11 +329,7 @@ parse_data_for_modelfit <- function(data) {
         SEX == "M" ~ 1,
         SEX == "F" ~ 2,
         TRUE ~ 3
-      ),
-      ROUTE = "oral",    # TODO: hardcoded for now
-      ROUTEN = 1,        # .
-      FORM = "tablet",   # .
-      FORMN = 1,         # /TODO
+      )
     )
   categorical_vars <- c("RACE", "ETHNIC", "ARM", "ACTARM", "COUNTRY")
   covar[paste0(categorical_vars, "N")] <- data.matrix(covar[, categorical_vars])
@@ -333,8 +340,8 @@ parse_data_for_modelfit <- function(data) {
     ) %>%
     dplyr::select(
       STUDYID, STUDYIDN, SITEID, SITEIDN, USUBJID, USUBJIDN,
-      SUBJID, SUBJIDN, AGE, SEX, SEXN, COHORT, COHORTC, ROUTE, ROUTEN,
-      RACE, RACEN, ETHNIC, ETHNICN, FORM, FORMN, COUNTRY, COUNTRYN
+      SUBJID, SUBJIDN, AGE, SEX, SEXN, COHORT, COHORTC,
+      RACE, RACEN, ETHNIC, ETHNICN, COUNTRY, COUNTRYN
     )
   
   #---- Derive additional baselines from VS and LB ----
@@ -388,13 +395,15 @@ parse_data_for_modelfit <- function(data) {
       by_vars = admiral::exprs(STUDYID, USUBJID)
     ) %>%
     dplyr::arrange(STUDYIDN, USUBJIDN, AFRLT, EVID) %>%
-    dplyr::mutate(RECSEQ = dplyr::row_number())
-  
+    dplyr::mutate(RECSEQ = dplyr::row_number()) %>%
+    dplyr::mutate(ROUTE = tolower(ROUTE), FORM = tolower(FORM))
+
   poppk_data <- adppk %>% # select the variables we need from the data
     dplyr::select(
       ID = SUBJID, TIME = NFRLT, 
       DV, MDV, EVID, SS, II,
-      AMT, SEXN, AGE, WTBL, SITEID
+      AMT, SEXN, AGE, WTBL, SITEID,
+      ROUTE, FORM
     )
   
   poppk_data

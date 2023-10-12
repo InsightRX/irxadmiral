@@ -15,21 +15,11 @@ get_data_for_modelfit <- function(
   path = NULL
 ) {
   
-  reqd_tables <- c("pc", "adsl", "ex", "lb", "vs")
-  if(is.null(db)) {
-    data <- read_data_files(
-      reqd_tables, 
-      path = path
-    )
-  } else {
-    # read from database:
-    conn <- create_db_connection(db)
-    on.exit(DBI::dbDisconnect(conn))
-    data <- read_data_db(
-      tables = reqd_tables, 
-      conn = conn
-    )
-  }
+  data <- read_data(
+    tables = c("pc", "adsl", "ex", "lb", "vs"), 
+    db = db, 
+    path = path
+  )
 
   # parse data into NONMEM-style and return
   parse_data_for_modelfit(data)

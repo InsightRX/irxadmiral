@@ -10,7 +10,10 @@ parse_data_for_modelfit(data)
 \item{data}{list containing SDTM tables as data.frames}
 }
 \value{
-data.frame with population PK input data
+data.frame with population PK input data in NONMEM-style
+format. It will also add the non-standard columns ROUTE ("oral", "iv") and
+FORM (formulation: "tablet", "suspension", "patch", "infusion", etc.) with
+values for each dose and NA for observations.
 }
 \description{
 Parse data into NONMEM-style dataset
