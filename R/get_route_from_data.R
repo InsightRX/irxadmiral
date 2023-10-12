@@ -27,6 +27,6 @@ get_route_from_data <- function(
     im = "im",
     intravenous = "iv",
     iv = "iv",
-    .default = "oral" 
+    "oral" 
   )
 }

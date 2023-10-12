@@ -28,16 +28,16 @@ parse_data_for_nca <- function(data) {
   remove_cohorts <- c("Screen Failure", "Placebo")
 
   merged_data <- data$pc %>%
-    setNames(toupper(names(.))) %>%
+    stats::setNames(toupper(names(.))) %>%
     merge(
       data$dm %>% # join with study-arm data
-      setNames(toupper(names(.))) %>%
+      stats::setNames(toupper(names(.))) %>%
       dplyr::select(USUBJID, ACTARM), 
       by = "USUBJID"
     ) %>%
     merge(
       data$ex %>%  # join with dose administration data
-      setNames(toupper(names(.))) %>%
+      stats::setNames(toupper(names(.))) %>%
       dplyr::select(USUBJID, EXDOSE, EXDOSU, EXROUTE, VISIT, VISITNUM),
       by = c("USUBJID", "VISITNUM")
     ) %>%

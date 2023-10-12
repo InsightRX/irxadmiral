@@ -23,11 +23,11 @@ read_data <- function(
   } else {
     # read from database:
     conn <- create_db_connection(db)
+    on.exit(DBI::dbDisconnect(conn))
     data <- read_data_db(
       tables = tables, 
       conn = conn
     )
-    DBI::dbDisconnect(conn)
   }
   
   data
