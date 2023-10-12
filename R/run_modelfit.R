@@ -34,16 +34,7 @@ run_modelfit <- function(
 ) {
   
   if(is.null(route)) {
-    if("ROUTE" %in% names(data)) {
-      route <- data %>%
-        dplyr::filter(EVID == 1) %>%
-        dplyr::slice(1) %>%
-        .$ROUTE %>%
-        tolower()
-    } else {
-      warning("`route` not specified and could not infer from data. Assuming `oral` model.")
-      route <- "oral"
-    }
+    route <- get_route_from_data(data$ROUTE)
   }
   
   ## read model file and source

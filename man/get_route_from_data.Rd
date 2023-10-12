@@ -2,19 +2,18 @@
 % Please edit documentation in R/get_route_from_data.R
 \name{get_route_from_data}
 \alias{get_route_from_data}
-\title{Get the route of administration from an SDTM dataset
-Will read from the EX table. It is assumed that all routes are the same
-for all patients and drug administrations.}
+\title{Get the route of administration from a vector of routes for doses}
 \usage{
 get_route_from_data(x)
 }
 \arguments{
 \item{x}{vector of routes, e.g. from EXROUTE columns in EX dataset,
-or ROUTE column in output dataset from}
+or ROUTE column in output dataset from \code{get_data_for_modeling()}.}
 }
 \value{
 route (character), either "iv", "oral", "sc", or "im"
 }
 \description{
-TODO: Support trials with mixed routes of administrations.
+It is assumed that all routes are the same for all patients and drug
+administrations.
 }
