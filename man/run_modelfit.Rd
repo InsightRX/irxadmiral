@@ -12,13 +12,11 @@ run_modelfit(data, n_cmt = 1, route = NULL, path)
 
 \item{n_cmt}{number of compartments for the population PK model}
 
-\item{route}{administration route, either \code{"oral"} or \code{"iv"}. If NULL
+\item{route}{administration route, either \code{"oral"} or \code{"iv"} or NULL. If NULL
 (default) will read from data (\code{ROUTE} column) and used route specified for
 first dose in dataset.}
 
 \item{path}{path to file to store output object from fit.}
-
-\item{n_iterations}{number of SAEM}
 }
 \description{
 This function fits a population PK model to a population PK dataset

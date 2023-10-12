@@ -8,11 +8,10 @@
 #' @param data dataset in NONMEM-style format, preferrably created using
 #' `create_modelfit_data()`.
 #' @param n_cmt number of compartments for the population PK model
-#' @param route administration route, either `"oral"` or `"iv"`. If NULL 
+#' @param route administration route, either `"oral"` or `"iv"` or NULL. If NULL 
 #' (default) will read from data (`ROUTE` column) and used route specified for 
 #' first dose in dataset.
 #' @param path path to file to store output object from fit.
-#' @param n_iterations number of SAEM
 #' 
 #' @return NULL
 #' @export
