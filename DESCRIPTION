@@ -28,6 +28,7 @@ Suggests:
     mockery,
     testthat (>= 3.0.0),
     withr
+Additional_repositories: https://iqnca.intiquan.com/rrepo
 License: file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
