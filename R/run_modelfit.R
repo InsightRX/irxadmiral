@@ -8,9 +8,10 @@
 #' @param data dataset in NONMEM-style format, preferrably created using
 #' `create_modelfit_data()`.
 #' @param n_cmt number of compartments for the population PK model
-#' @param route administration route, either `"oral"` or `"iv"`
+#' @param route administration route, either `"oral"` or `"iv"` or NULL. If NULL 
+#' (default) will read from data (`ROUTE` column) and used route specified for 
+#' first dose in dataset.
 #' @param path path to file to store output object from fit.
-#' @param n_iterations number of SAEM
 #' 
 #' @return NULL
 #' @export
@@ -20,16 +21,20 @@
 #' run_modelfit(
 #'   data = data,
 #'   cmt = 1, 
-#'   admin_type = "oral",
+#'   route = "oral",
 #'   path = "./outputs/fit.rds"
 #' )
 
 run_modelfit <- function(
   data,
   n_cmt = 1,
-  route = "oral",
+  route = NULL,
   path
 ) {
+  
+  if(is.null(route)) {
+    route <- get_route_from_data(data$ROUTE)
+  }
   
   ## read model file and source
   model <- get(paste0("nlmixr2_pk_", n_cmt, "cmt_", route, "_linear"))

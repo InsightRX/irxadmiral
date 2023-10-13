@@ -1,3 +1,38 @@
+#' Get specific tables from database or xpt files
+#' 
+#' @param tables Character vector of tables to read
+#' @param db list with db connection information. If NULL, will try to read
+#' same data from xpt files in `path`
+#' @param path optional. If no `db` specified, will read tables from xpt
+#' files in folder `path`.
+#' 
+#' @return List containing each table as a data frame
+#'
+#' @export
+#' 
+read_data <- function(
+    tables,
+    db = NULL,
+    path = NULL
+) {
+  if(is.null(db)) {
+    data <- read_data_files(
+      tables, 
+      path = path
+    )
+  } else {
+    # read from database:
+    conn <- create_db_connection(db)
+    on.exit(DBI::dbDisconnect(conn))
+    data <- read_data_db(
+      tables = tables, 
+      conn = conn
+    )
+  }
+  
+  data
+}
+
 #' Read in .xpt files
 #'
 #' @param tables Character vector of tables to load

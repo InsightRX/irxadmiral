@@ -4,7 +4,7 @@
 \alias{run_modelfit}
 \title{Run a modelfit}
 \usage{
-run_modelfit(data, n_cmt = 1, route = "oral", path)
+run_modelfit(data, n_cmt = 1, route = NULL, path)
 }
 \arguments{
 \item{data}{dataset in NONMEM-style format, preferrably created using
@@ -12,7 +12,9 @@ run_modelfit(data, n_cmt = 1, route = "oral", path)
 
 \item{n_cmt}{number of compartments for the population PK model}
 
-\item{route}{administration route, either \code{"oral"} or \code{"iv"}}
+\item{route}{administration route, either \code{"oral"} or \code{"iv"} or NULL. If NULL
+(default) will read from data (\code{ROUTE} column) and used route specified for
+first dose in dataset.}
 
 \item{path}{path to file to store output object from fit.}
 }
@@ -27,7 +29,7 @@ rds file, and not be returned.
 run_modelfit(
   data = data,
   cmt = 1, 
-  admin_type = "oral",
+  route = "oral",
   path = "./outputs/fit.rds"
 )
 }
