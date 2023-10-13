@@ -402,8 +402,10 @@ parse_data_for_modelfit <- function(data) {
     dplyr::select(
       ID = SUBJID, TIME = NFRLT, 
       DV, MDV, EVID, SS, II,
-      AMT, SEXN, AGE, WTBL, SITEID,
-      ROUTE, FORM
+      AMT, SEXN, AGE, WT = WTBL, 
+      ROUTE, FORM, 
+      COHORT = COHORTC, SITEID,
+      RACE, ETHNIC, COUNTRY
     )
   
   poppk_data
