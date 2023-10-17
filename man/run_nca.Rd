@@ -4,7 +4,7 @@
 \alias{run_nca}
 \title{Run a non-compartmental analysis}
 \usage{
-run_nca(data)
+run_nca(data, path)
 }
 \arguments{
 \item{data}{dataset in pre-parse format, preferrably created using
@@ -21,7 +21,7 @@ rds file, and not be returned.
 
 run_nca(
   data = data,
-  path = "./outputs/fit.rds"
+  path = "./outputs/nca.rds"
 )
 
 }

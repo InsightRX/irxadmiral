@@ -15,11 +15,15 @@
 #' 
 #' run_nca(
 #'   data = data,
-#'   path = "./outputs/fit.rds"
+#'   path = "./outputs/nca.rds"
 #' )
 #' 
-run_nca <- function(data) {
-  IQnca::IQdataNCA(data) %>% # creates NCA object and fits linear model to terminal data
+run_nca <- function(
+  data,
+  path
+) {
+  
+  nca <- IQnca::IQdataNCA(data) %>% # creates NCA object and fits linear model to terminal data
     IQnca::nca_IQdataNCA() %>%  # calculates the actual NCA parameters
     dplyr::select(
       USUBJID, ACTARM, 
@@ -27,4 +31,9 @@ run_nca <- function(data) {
       AUCLST, CLST, LAMZ, LAMZNPT
     ) %>%
     data.frame()
+  
+  ## save nca object to file
+  saveRDS(nca, path)
+  
+  return(nca)
 }
