@@ -3,9 +3,13 @@
 #' Using fit object from fit with nlmixr2.
 #' 
 #' @param obj fit object from nlmixr2
-#' @param dose dose amount
-#' @param interval dosing interval
+#' @param scenarios list of lists, with inner list having `dose` and `interval`
+#' elements.
+#' @param dose vector of dose amounts. Needs to match length of `interval`
+#' @param interval vector of dosing intervals. Needs to match length of `dose`
 #' @param n_doses number of doses to simulate
+#' @param n_days alternative to `n_doses`, specify number of days. `n_doses`
+#' takes precedence if both are specified.
 #' @param n_subjects number of subjects to simulate
 #' @param aggregate summarize the data using mean, median, sd, etc.
 #' @param group grouping to be added to aggregated data? 
@@ -17,9 +21,10 @@
 #' 
 run_simulation <- function(
     obj,
-    dose, 
+    dose,
     interval,
     n_doses = 5,
+    n_days = 5,
     n_subjects = 500,
     aggregate = TRUE,
     bsv = TRUE,
@@ -27,31 +32,53 @@ run_simulation <- function(
     group = NULL,
     ...
 ) {
-  t_obs <- seq(0, (n_doses+1)*interval, by = 2)
-  ev <- rxode2::eventTable() %>%
-    rxode2::add.dosing(
-      dose = dose,
-      nbr.doses = 5, 
-      dosing.interval = interval
-    ) %>%
-    rxode2::add.sampling(t_obs)
+  if(length(dose) != length(interval)) {
+    stop("Length of `dose` vector needs to match length of `interval` vector.")
+  }
   if(!bsv) {
     omega <- fit$omega * 1e-6 # cannot be NULL or matrix of 0s
   } else {
     omega <- fit$omega
   }
-  dat <- rxode2::rxSolve(
-    object = fit,
-    omega = omega,
-    events = ev,
-    nsim =  n_subjects,
-    seed = 12345,
-    returnType = "data.frame",
-    simVariability = FALSE, # This seems to be "uncertainty in Theta" rather than "variability". We usually want this switched off.
-    ...
-  ) %>%
-    dplyr::mutate(y = ipredSim)
-  
+  if(is.null(n_doses) && is.null(n_days)) {
+    stop("Either `n_doses` or `n_days` need to be specified.")
+  }
+
+  dat <- data.frame()
+  scenarios <- 1:length(dose)
+  for(i in scenarios) {
+    if(!is.null(n_days)) {
+      n_doses <- n_days * 24/interval[i]
+    }
+    t_obs <- seq(0, (n_doses+1) * interval[i], by = 2)
+    ev <- rxode2::eventTable() %>%
+      rxode2::add.dosing(
+        dose = dose[i],
+        nbr.doses = n_doses, 
+        dosing.interval = interval[i]
+      ) %>%
+      rxode2::add.sampling(t_obs)
+    dat <- dplyr::bind_rows(
+      dat,
+      rxode2::rxSolve(
+        object = fit,
+        omega = omega,
+        events = ev,
+        nsim =  n_subjects,
+        seed = 12345,
+        returnType = "data.frame",
+        simVariability = FALSE, # This seems to be "uncertainty in Theta" rather than "variability". We usually want this switched off.
+        ...
+      ) %>%
+        dplyr::mutate(y = ipredSim) %>%
+        dplyr::mutate(
+          scenario = paste0("Scenario ", i, ": ", dose[i], " mg / ", interval[i], " hrs"), 
+          dose = dose[i], 
+          interval = interval[i]
+        )
+    )
+  }
+
   ## add residual error
   prop_sd <- 0
   add_sd <- 0
@@ -71,8 +98,10 @@ run_simulation <- function(
   }
   if(aggregate) {
     dat <- dat %>%
-      dplyr::group_by(time, .add = TRUE) %>%
+      dplyr::group_by(time, scenario, .add = TRUE) %>%
       dplyr::summarise(
+        dose = dose[1],
+        interval = interval[1],
         mean = mean(y),
         median = stats::median(y),
         q_5 = stats::quantile(y, .05),

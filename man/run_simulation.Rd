@@ -9,6 +9,7 @@ run_simulation(
   dose,
   interval,
   n_doses = 5,
+  n_days = 5,
   n_subjects = 500,
   aggregate = TRUE,
   bsv = TRUE,
@@ -20,11 +21,14 @@ run_simulation(
 \arguments{
 \item{obj}{fit object from nlmixr2}
 
-\item{dose}{dose amount}
+\item{dose}{vector of dose amounts. Needs to match length of \code{interval}}
 
-\item{interval}{dosing interval}
+\item{interval}{vector of dosing intervals. Needs to match length of \code{dose}}
 
 \item{n_doses}{number of doses to simulate}
+
+\item{n_days}{alternative to \code{n_doses}, specify number of days. \code{n_doses}
+takes precedence if both are specified.}
 
 \item{n_subjects}{number of subjects to simulate}
 
@@ -37,6 +41,9 @@ run_simulation(
 \item{group}{grouping to be added to aggregated data?}
 
 \item{...}{arguments passed on to rxode2::rxSolve() function}
+
+\item{scenarios}{list of lists, with inner list having \code{dose} and \code{interval}
+elements.}
 }
 \description{
 Using fit object from fit with nlmixr2.
