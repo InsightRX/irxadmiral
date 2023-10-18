@@ -28,13 +28,13 @@ run_simulation <- function(
     ...
 ) {
   t_obs <- seq(0, (n_doses+1)*interval, by = 2)
-  ev <- eventTable() %>%
-    add.dosing(
+  ev <- rxode2::eventTable() %>%
+    rxode2::add.dosing(
       dose = dose,
       nbr.doses = 5, 
       dosing.interval = interval
     ) %>%
-    add.sampling(t_obs)
+    rxode2::add.sampling(t_obs)
   if(!bsv) {
     omega <- fit$omega * 1e-6 # cannot be NULL or matrix of 0s
   } else {
@@ -50,7 +50,7 @@ run_simulation <- function(
     simVariability = FALSE, # This seems to be "uncertainty in Theta" rather than "variability". We usually want this switched off.
     ...
   ) %>%
-    mutate(y = ipredSim)
+    dplyr::mutate(y = ipredSim)
   
   ## add residual error
   prop_sd <- 0
@@ -71,13 +71,13 @@ run_simulation <- function(
   }
   if(aggregate) {
     dat <- dat %>%
-      group_by(time, .add = TRUE) %>%
+      dplyr::group_by(time, .add = TRUE) %>%
       dplyr::summarise(
         mean = mean(y),
-        median = median(y),
-        q_5 = quantile(y, .05),
-        q_95 = quantile(y, .95),
-        sd = sd(y)
+        median = stats::median(y),
+        q_5 = stats::quantile(y, .05),
+        q_95 = stats::quantile(y, .95),
+        sd = stats::sd(y)
       )
   } else {
     dat 

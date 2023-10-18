@@ -9,7 +9,7 @@ run_simulation(
   dose,
   interval,
   n_doses = 5,
-  n_subjects = 100,
+  n_subjects = 500,
   aggregate = TRUE,
   bsv = TRUE,
   res_error = TRUE,
