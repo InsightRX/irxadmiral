@@ -8,7 +8,7 @@ run_simulation(
   obj,
   dose,
   interval,
-  n_doses = 5,
+  n_doses = NULL,
   n_days = 5,
   n_subjects = 500,
   aggregate = TRUE,
@@ -27,7 +27,7 @@ run_simulation(
 
 \item{n_doses}{number of doses to simulate}
 
-\item{n_days}{alternative to \code{n_doses}, specify number of days. \code{n_doses}
+\item{n_days}{alternative to \code{n_doses}, specify number of days. \code{n_days}
 takes precedence if both are specified.}
 
 \item{n_subjects}{number of subjects to simulate}
@@ -41,9 +41,6 @@ takes precedence if both are specified.}
 \item{group}{grouping to be added to aggregated data?}
 
 \item{...}{arguments passed on to rxode2::rxSolve() function}
-
-\item{scenarios}{list of lists, with inner list having \code{dose} and \code{interval}
-elements.}
 }
 \description{
 Using fit object from fit with nlmixr2.

@@ -3,12 +3,10 @@
 #' Using fit object from fit with nlmixr2.
 #' 
 #' @param obj fit object from nlmixr2
-#' @param scenarios list of lists, with inner list having `dose` and `interval`
-#' elements.
 #' @param dose vector of dose amounts. Needs to match length of `interval`
 #' @param interval vector of dosing intervals. Needs to match length of `dose`
 #' @param n_doses number of doses to simulate
-#' @param n_days alternative to `n_doses`, specify number of days. `n_doses`
+#' @param n_days alternative to `n_doses`, specify number of days. `n_days`
 #' takes precedence if both are specified.
 #' @param n_subjects number of subjects to simulate
 #' @param aggregate summarize the data using mean, median, sd, etc.
@@ -23,7 +21,7 @@ run_simulation <- function(
     obj,
     dose,
     interval,
-    n_doses = 5,
+    n_doses = NULL,
     n_days = 5,
     n_subjects = 500,
     aggregate = TRUE,
@@ -70,7 +68,10 @@ run_simulation <- function(
         simVariability = FALSE, # This seems to be "uncertainty in Theta" rather than "variability". We usually want this switched off.
         ...
       ) %>%
-        dplyr::mutate(y = ipredSim) %>%
+        dplyr::rename(
+          y = ipredSim,
+          id = sim.id
+        ) %>%
         dplyr::mutate(
           scenario = paste0("Scenario ", i, ": ", dose[i], " mg / ", interval[i], " hrs"), 
           dose = dose[i], 
