@@ -15,6 +15,7 @@ run_simulation(
   bsv = TRUE,
   res_error = TRUE,
   group = NULL,
+  path = NULL,
   ...
 )
 }
@@ -39,6 +40,8 @@ takes precedence if both are specified.}
 \item{res_error}{Add residual unexplained error to the simulated data?}
 
 \item{group}{grouping to be added to aggregated data?}
+
+\item{path}{path to file to store output object from fit.}
 
 \item{...}{arguments passed on to rxode2::rxSolve() function}
 }

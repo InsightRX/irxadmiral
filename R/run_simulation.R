@@ -13,6 +13,7 @@
 #' @param group grouping to be added to aggregated data? 
 #' @param bsv Simulate using between subject variability
 #' @param res_error Add residual unexplained error to the simulated data?
+#' @param path path to file to store output object from fit.
 #' @param ... arguments passed on to rxode2::rxSolve() function
 #' 
 #' @export
@@ -28,6 +29,7 @@ run_simulation <- function(
     bsv = TRUE,
     res_error = TRUE,
     group = NULL,
+    path = NULL,
     ...
 ) {
   if(length(dose) != length(interval)) {
@@ -112,5 +114,11 @@ run_simulation <- function(
   } else {
     dat 
   }
+  
+  ## save fit object to file
+  if(!is.null(path)) {
+    saveRDS(fit, path)
+  }
+  
   return(dat)
 }
