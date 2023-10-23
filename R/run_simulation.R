@@ -111,13 +111,11 @@ run_simulation <- function(
         q_95 = stats::quantile(y, .95),
         sd = stats::sd(y)
       )
-  } else {
-    dat 
   }
   
   ## save fit object to file
   if(!is.null(path)) {
-    saveRDS(fit, path)
+    saveRDS(dat, path)
   }
   
   return(dat)
