@@ -18,11 +18,13 @@ Imports:
     ggplot2,
     patchwork,
     nlmixr2,
+    rxode2,
     stringr,
     tidyr,
     tidyselect,
     RPostgres,
-    IQnca
+    IQnca,
+    PKPDsim
 Suggests:
     fs,
     mockery,
