@@ -2,6 +2,7 @@
 
 export(basic_gof_plot)
 export(create_db_connection)
+export(create_nca_table)
 export(get_data_for_modelfit)
 export(get_data_for_nca)
 export(get_route_from_data)

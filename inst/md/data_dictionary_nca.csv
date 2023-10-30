@@ -1,0 +1,13 @@
+Object,Type,Description
+USUBJID,grouping,subject id
+ACTARM ,grouping,trial arm
+AUCMETHD,info,NCA method
+LAMZNPT,info,Number of regression points used
+CMAX,parameter,Maximum conc
+TMAX,parameter,Time of maximum conc
+TLAG,parameter,Lag time
+AUCALL,parameter,AUC to infinity
+LAMZHL,parameter,Terminal half-life
+AUCLST,parameter,AUC to last obs
+CLST,parameter,Last non-zero concentration
+LAMZ,parameter,Lambda z
