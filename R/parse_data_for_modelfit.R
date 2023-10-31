@@ -127,8 +127,11 @@ parse_data_for_modelfit <- function(data) {
     admiral::derive_vars_dtm_to_dt(admiral::exprs(ADTM)) %>%
     admiral::derive_vars_dtm_to_tm(admiral::exprs(ADTM)) %>%
     admiral::derive_vars_dtm_to_tm(admiral::exprs(ASTDTM)) %>%
-    admiral::derive_vars_dtm_to_tm(admiral::exprs(AENDTM))
-  
+    admiral::derive_vars_dtm_to_tm(admiral::exprs(AENDTM)) %>%
+    # TODO: line below is necessary, because create_single_dose_dataset() messes 
+    #       up the actual nominal times. Should replace with custom function?
+    dplyr::filter(AVISITN == 1)
+
   # ---- Find first dose per treatment per subject ----
   # ---- Join with ADPPK data and keep only subjects with dosing ----
   
@@ -406,8 +409,9 @@ parse_data_for_modelfit <- function(data) {
       ROUTE, FORM, 
       COHORT = COHORTC, SITEID,
       RACE, ETHNIC, COUNTRY
-    )
-  
+    ) %>% 
+    dplyr::filter(!(is.na(DV) & EVID == 0)) # filter out DV=0 at time==0
+
   poppk_data
   
 }

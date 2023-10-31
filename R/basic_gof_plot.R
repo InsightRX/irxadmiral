@@ -14,7 +14,7 @@ basic_gof_plot <- function(
 ) {
   gof_data <- fit %>% 
     data.frame() %>% # nlmixr2 object is a custom class
-    dplyr::select(ID, TIME, PRED, IPRED, DV, EVID, CWRES, NPDE, tad) %>%
+    dplyr::select(ID, TIME, PRED, IPRED, DV, EVID, NPDE, tad) %>%
     dplyr::filter(EVID == 0)
   p1 <- gof_data %>%
     tidyr::pivot_longer(cols = c(PRED, IPRED)) %>%

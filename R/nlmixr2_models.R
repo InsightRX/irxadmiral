@@ -3,13 +3,13 @@
 #' @export
 nlmixr2_pk_1cmt_oral_linear <- function() {
   ini({
-    tka     <- log(0.5)
+    tka     <- log(0.25)
     tCL     <- log(5) 
     tV      <- log(50)
     eta_CL   ~ 0.3
     eta_V    ~ 0.3
     eta_ka   ~ 0.3
-    prop_sd <- 0.3
+    prop_sd <- 0.15
   })
   model({
     ka <- exp(tka + eta_ka)

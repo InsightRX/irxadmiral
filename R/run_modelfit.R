@@ -45,7 +45,7 @@ run_modelfit <- function(
     data,
     est = "saem",
     nlmixr2::saemControl(print=50, nBurn=100, nEm=150), # limit to 250 iterations for now
-    nlmixr2::tableControl(cwres=TRUE, npde=TRUE)
+    nlmixr2::tableControl(cwres=FALSE, npde=TRUE)
   )
   
   ## save fit object to file
