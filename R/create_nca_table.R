@@ -23,7 +23,7 @@ create_nca_table <- function(
     description = TRUE
 ) {
   format <- match.arg(format, c("long", "wide"))
-  dict <- read.csv(file = system.file(
+  dict <- utils::read.csv(file = system.file(
     package = "irxadmiral", "md/data_dictionary_nca.csv"
   ))
   if(is.null(parameters)) {
@@ -80,7 +80,7 @@ create_nca_table <- function(
     
   ## save to file
   if(!is.null(path)) {
-    write.csv(
+    utils::write.csv(
       nca_table, 
       file = path, 
       row.names = FALSE, 

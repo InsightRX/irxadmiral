@@ -20,7 +20,7 @@ create_demographics_table <- function(
     dplyr::filter(!duplicated(vstest)) %>%
     dplyr::select(usubjid, name = vstest, value = vsstresc) %>%
     tidyr::pivot_wider() %>%
-    setNames(tolower(names(.)))
+    stats::setNames(tolower(names(.)))
   
   ## merge into with DM table  
   demo <- data$dm %>%
@@ -42,8 +42,8 @@ create_demographics_table <- function(
     dplyr::group_by(c(name, !!group)) %>%
     dplyr::summarise(
       mean = mean(value),
-      sd = sd(value),
-      median = median(value),
+      sd = stats::sd(value),
+      median = stats::median(value),
       min = min(value),
       max = max(value)
     ) %>%
@@ -53,7 +53,7 @@ create_demographics_table <- function(
     dplyr::mutate(min_max = paste0(min, " - ", max)) %>%
     dplyr::select(-min, -max) %>%
     tidyr::pivot_longer(cols = c(mean, sd, median, min_max)) %>%
-    setNames(c("Demographic", "Statistic", "Value"))
+    stats::setNames(c("Demographic", "Statistic", "Value"))
   
   cat_data <- lapply(categorical, function(x) {
     demo %>%
@@ -64,7 +64,7 @@ create_demographics_table <- function(
       dplyr::mutate(Demographic = !!x)
   }) %>%
     dplyr::bind_rows() %>%
-    setNames(c("Statistic", "Value", "Demographic")) %>%
+    stats::setNames(c("Statistic", "Value", "Demographic")) %>%
     dplyr::select(Demographic, Statistic, Value) %>%
     dplyr::mutate(
       dplyr::across(!!names(.), ~ as.character(.x))
@@ -80,7 +80,7 @@ create_demographics_table <- function(
     dplyr::rename("Value/count" = Value)
   
   if(!is.null(path)) {
-    write.csv(comb_data, file = path, row.names=F, quote=F)
+    utils::write.csv(comb_data, file = path, row.names=F, quote=F)
   }
   
   comb_data
