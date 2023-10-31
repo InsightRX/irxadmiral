@@ -7,7 +7,8 @@
 #' @param parameters vector of parameters to output, using upper case CDISC
 #' standard names, e.g. `c("AUCALL", "CMAX", "TMAX")`. Defaults to output all
 #' available parameters.
-#' @param group group results by a variable in the dataset, e.g. `"ACTARM"`
+#' @param group name of variable in dataset to group statistics by, e.g. 
+#' `"ACTARM"`
 #' @param path optional, path to filename to save output table to.
 #' @param format output as table in wide or long format.
 #' @param description include description of parameter names into table?

@@ -20,7 +20,8 @@ create_nca_table(
 standard names, e.g. \code{c("AUCALL", "CMAX", "TMAX")}. Defaults to output all
 available parameters.}
 
-\item{group}{group results by a variable in the dataset, e.g. \code{"ACTARM"}}
+\item{group}{name of variable in dataset to group statistics by, e.g.
+\code{"ACTARM"}}
 
 \item{path}{optional, path to filename to save output table to.}
 
