@@ -19,6 +19,7 @@ Imports:
     patchwork,
     nlmixr2,
     rxode2,
+    rlang,
     stringr,
     tidyr,
     tidyselect,
