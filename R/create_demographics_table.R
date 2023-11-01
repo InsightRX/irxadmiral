@@ -15,6 +15,7 @@ create_demographics_table <- function(
   
   ## get data not in DM table
   vitals <- data$vs %>% 
+    stats::setNames(tolower(names(.))) %>%
     dplyr::filter(vstest %in% c("Weight", "Height")) %>%
     dplyr::group_by(usubjid) %>%
     dplyr::filter(!duplicated(vstest)) %>%
@@ -24,6 +25,7 @@ create_demographics_table <- function(
   
   ## merge into with DM table  
   demo <- data$dm %>%
+    stats::setNames(tolower(names(.))) %>%
     merge(vitals) %>%
     dplyr::group_by(usubjid) %>%
     dplyr::slice(1) %>% # make sure only 1 row per patient
@@ -61,10 +63,10 @@ create_demographics_table <- function(
       dplyr::select(!!x) %>%
       table() %>%
       as.data.frame() %>%
-      dplyr::mutate(Demographic = !!x)
+      dplyr::mutate(Demographic = !!x) %>%
+      stats::setNames(c("Statistic", "Value", "Demographic"))
   }) %>%
     dplyr::bind_rows() %>%
-    stats::setNames(c("Statistic", "Value", "Demographic")) %>%
     dplyr::select(Demographic, Statistic, Value) %>%
     dplyr::mutate(
       dplyr::across(!!names(.), ~ as.character(.x))
