@@ -12,9 +12,12 @@ basic_gof_plot <- function(
   fit,
   path = NULL
 ) {
+  if(! "EVID" %in% names(fit)) {
+    fit$EVID <- 0
+  }
   gof_data <- fit %>% 
     data.frame() %>% # nlmixr2 object is a custom class
-    dplyr::select(ID, TIME, PRED, IPRED, DV, EVID, NPDE, tad) %>%
+    dplyr::select(ID, TIME, EVID, PRED, IPRED, DV, NPDE, tad) %>%
     dplyr::filter(EVID == 0)
   p1 <- gof_data %>%
     tidyr::pivot_longer(cols = c(PRED, IPRED)) %>%
