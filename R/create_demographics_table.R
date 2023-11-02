@@ -60,7 +60,7 @@ create_demographics_table <- function(
     } else {
       demo <- data$dm %>%
         stats::setNames(tolower(names(.))) %>%
-        dplyr::left_join(vitals, by = "usubjid")
+        dplyr::full_join(vitals, by = "usubjid")
     }
   }
   demo <- demo %>%
