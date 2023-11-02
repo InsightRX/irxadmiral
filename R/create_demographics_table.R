@@ -60,13 +60,14 @@ create_demographics_table <- function(
     } else {
       demo <- data$dm %>%
         stats::setNames(tolower(names(.))) %>%
-        merge(vitals)
+        dplyr::left_join(vitals, by = "usubjid")
     }
   }
   demo <- demo %>%
     dplyr::group_by(usubjid) %>%
     dplyr::slice(1) %>% # make sure only 1 row per patient
-    dplyr::select(usubjid, !! demographics_found) 
+    dplyr::select(usubjid, !! demographics_found) %>%
+    dplyr::ungroup()
 
   ## figure out which is categorical and which is continuous
   types <- lapply(demographics_found, function(d) { is_continuous(demo[[d]]) } )
@@ -82,15 +83,14 @@ create_demographics_table <- function(
       dplyr::mutate(
         dplyr::across(!!continuous, ~ as.numeric(as.character(.x)))
       ) %>%
-      dplyr::ungroup() %>%
       tidyr::pivot_longer(cols = continuous) %>%
       dplyr::group_by(c(name, !!group)) %>%
       dplyr::summarise(
-        mean = mean(value),
-        sd = stats::sd(value),
-        median = stats::median(value),
-        min = min(value),
-        max = max(value)
+        mean = mean(value, na.rm = TRUE),
+        sd = stats::sd(value, na.rm = TRUE),
+        median = stats::median(value, na.rm = TRUE),
+        min = min(value, na.rm = TRUE),
+        max = max(value, na.rm = TRUE)
       ) %>%
       dplyr::mutate(
         dplyr::across(c(mean, sd, median, min, max), ~ as.character(round(.x, 1)))
@@ -105,7 +105,6 @@ create_demographics_table <- function(
   if(length(categorical) > 0) {
     cat_data <- lapply(categorical, function(x) {
       demo %>%
-        dplyr::ungroup() %>%
         dplyr::select(!!x) %>%
         table() %>%
         as.data.frame() %>%
