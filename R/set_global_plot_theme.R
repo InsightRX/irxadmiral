@@ -11,11 +11,10 @@ set_global_plot_theme <- function(theme = "irx") {
     # "#3870FA" "#35BCB1" "#193046" "#F2F2F0" "#ffffff" 
     
     ggplot2::theme_set(
-      ggplot2::theme_classic()  %+replace% 
+      ggplot2::theme_classic() +
         ggplot2::theme(
           strip.background = ggplot2::element_rect(fill = "black", color = "black"),
-          strip.text = ggplot2::element_text(lineheight = rel(20), colour = "white"),
-          complete = TRUE
+          strip.text = ggplot2::element_text(colour = "white")
         )
     )
     ggplot2::update_geom_defaults(
