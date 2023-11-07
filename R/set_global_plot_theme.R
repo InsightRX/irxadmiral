@@ -1,4 +1,10 @@
 #' Set global ggplot2 theme and default colors for geoms
+#'
+#' `set_global_plot_theme()` sets the default ggplot2 theme, as well as default
+#' colors and alpha values for line, point, violin, boxplot, and rect geoms.
+#' `reset_global_plot_theme()` resets those defaults.
+#'
+#' @md
 #' 
 #' @param theme theme name
 #' 
@@ -39,4 +45,34 @@ set_global_plot_theme <- function(theme = "irx") {
     )
   }
   
+}
+
+#' @rdname set_global_plot_theme
+#' @export
+reset_global_plot_theme <- function() {
+  # TODO: this will be easier once
+  # https://github.com/tidyverse/ggplot2/pull/5098 is merged.
+  # For now we just do it manually
+  ggplot2::theme_set(ggplot2::theme_grey())
+
+  ggplot2::update_geom_defaults(
+    "line",
+    ggplot2::aes(color = "black", alpha = NA)
+  )
+  ggplot2::update_geom_defaults(
+    "point",
+    ggplot2::aes(color = "black", alpha = NA)
+  )
+  ggplot2::update_geom_defaults(
+    "violin",
+    ggplot2::aes(fill = "white", color = "grey20", alpha = NA)
+  )
+  ggplot2::update_geom_defaults(
+    "boxplot",
+    ggplot2::aes(fill = "white", color = "grey20", alpha = NA)
+  )
+  ggplot2::update_geom_defaults(
+    "rect",
+    ggplot2::aes(fill = "grey30", color = NA)
+  )
 }
