@@ -8,3 +8,8 @@ local_create_data_dir <- function(dir = fs::file_temp(), env = parent.frame()) {
   haven::write_xpt(mtcars, path = fs::path(dir, "mtcars.xpt"))
   haven::write_xpt(trees, path = fs::path(dir, "trees.xpt"))
 }
+
+local_set_global_plot_theme <- function(theme = "irx", env = parent.frame()) {
+  set_global_plot_theme(theme)
+  withr::defer(reset_global_plot_theme(), envir = env)
+}

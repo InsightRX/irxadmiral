@@ -2,13 +2,18 @@
 % Please edit documentation in R/set_global_plot_theme.R
 \name{set_global_plot_theme}
 \alias{set_global_plot_theme}
+\alias{reset_global_plot_theme}
 \title{Set global ggplot2 theme and default colors for geoms}
 \usage{
 set_global_plot_theme(theme = "irx")
+
+reset_global_plot_theme()
 }
 \arguments{
 \item{theme}{theme name}
 }
 \description{
-Set global ggplot2 theme and default colors for geoms
+\code{set_global_plot_theme()} sets the default ggplot2 theme, as well as default
+colors and alpha values for line, point, violin, boxplot, and rect geoms.
+\code{reset_global_plot_theme()} resets those defaults.
 }
