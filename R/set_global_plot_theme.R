@@ -33,6 +33,10 @@ set_global_plot_theme <- function(theme = "irx") {
       "boxplot", 
       ggplot2::aes(fill = "#35bcb1", color="#35bcb1", alpha = 0.2)
     )
+    ggplot2::update_geom_defaults(
+      "rect",
+      ggplot2::aes(fill = "#35bcb1", color = "#35bcb1")
+    )
   }
   
 }
