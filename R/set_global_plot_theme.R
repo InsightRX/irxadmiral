@@ -41,7 +41,7 @@ set_global_plot_theme <- function(theme = "irx") {
     )
     ggplot2::update_geom_defaults(
       "rect",
-      ggplot2::aes(fill = "#35bcb1", color = "#35bcb1")
+      ggplot2::aes(fill = "#35bcb1", color = NA)
     )
   }
   
