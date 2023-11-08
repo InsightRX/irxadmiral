@@ -48,7 +48,7 @@ run_simulation <- function(
   scenarios <- 1:length(dose)
   for(i in scenarios) {
     if(!is.null(n_days)) {
-      n_doses <- n_days * 24/interval[i]
+      n_doses <- ceiling(n_days * 24/interval[i])
     }
     t_obs <- seq(0, (n_doses+1) * interval[i], by = 2)
     ev <- rxode2::eventTable() %>%
