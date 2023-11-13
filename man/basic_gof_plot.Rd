@@ -13,7 +13,8 @@ basic_gof_plot(fit, path = NULL)
 the file format automatically).}
 }
 \value{
-ggplot2 object. If \code{path} is specified, will not return anything.
+plotly object. If \code{path} is specified, will not return anything, but
+plotly file will be saved at the requested path.
 }
 \description{
 Create basic goodness of fit plots based on nlmixr2 fit
