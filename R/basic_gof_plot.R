@@ -42,7 +42,8 @@ basic_gof_plot <- function(
   p_comb <- plotly::subplot(
     p1,
     p2,
-    nrows = 2,
+    nrows = 2, 
+    margin = 0.03,
     titleX = TRUE,
     titleY = TRUE
   )
