@@ -7,11 +7,9 @@
 #' 
 #' @param data dataset in NONMEM-style format, preferrably created using
 #' `create_modelfit_data()`.
-#' @param n_cmt number of compartments for the population PK model
-#' @param route administration route, either `"oral"` or `"iv"` or NULL. If NULL 
-#' (default) will read from data (`ROUTE` column) and used route specified for 
-#' first dose in dataset.
 #' @param path path to file to store output object from fit.
+#' @param ... arguments passed to `create_model()` function. See 
+#' available arguments to that function.
 #' 
 #' @return NULL
 #' @export
@@ -20,34 +18,34 @@
 #' 
 #' run_modelfit(
 #'   data = data,
-#'   cmt = 1, 
+#'   n_cmt = 1, 
 #'   route = "oral",
+#'   absorption = "linear",
 #'   path = "./outputs/fit.rds"
 #' )
 
 run_modelfit <- function(
   data,
-  n_cmt = 1,
-  route = NULL,
-  path
+  path,
+  ...
 ) {
   
-  if(is.null(route)) {
-    route <- get_route_from_data(data$ROUTE)
-  }
-  
-  ## read model file and source
-  model <- get(paste0("nlmixr2_pk_", n_cmt, "cmt_", route, "_linear"))
+  ## load / create model  
+  model <- create_model(
+    software = "nlmixr",
+    data = data,
+    ...
+  )
 
   ## fit model to data
   fit <- nlmixr2::nlmixr2(
-    model, 
+    model,
     data,
     est = "saem",
     nlmixr2::saemControl(print=50, nBurn=100, nEm=150), # limit to 250 iterations for now
     nlmixr2::tableControl(cwres=FALSE, npde=TRUE)
   )
-  
+
   ## save fit object to file
   saveRDS(fit, path)
   
