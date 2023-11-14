@@ -4,7 +4,8 @@
 #' @param path if not NULL, path to save plot as file (file extension determines 
 #' the file format automatically).
 #' 
-#' @returns ggplot2 object. If `path` is specified, will not return anything.
+#' @return plotly object. If `path` is specified, will not return anything, but
+#'   plotly file will be saved at the requested path.
 #' 
 #' @export
 #' 
@@ -28,6 +29,7 @@ basic_gof_plot <- function(
       ggplot2::geom_smooth(method = "lm") +
       ggplot2::xlab("") +
       ggplot2::ylab("observed")
+  p1 <- plotly::ggplotly(p1)
   p2 <- gof_data %>%
     tidyr::pivot_longer(cols = c(TIME, PRED)) %>%
     ggplot2::ggplot(ggplot2::aes(x = value, y = NPDE)) +
@@ -36,9 +38,17 @@ basic_gof_plot <- function(
       ggplot2::geom_smooth(method = "lm") +
       ggplot2::xlab("") +
       ggplot2::ylab("NPDE")
-  p_comb <- patchwork::wrap_plots(p1, p2, ncol = 1)
+  p2 <- plotly::ggplotly(p2)
+  p_comb <- plotly::subplot(
+    p1,
+    p2,
+    nrows = 2, 
+    margin = 0.03,
+    titleX = TRUE,
+    titleY = TRUE
+  )
   if(!is.null(path)) {
-    ggplot2::ggsave(filename = path, plot = p_comb)
+    htmlwidgets::saveWidget(p_comb, file = path)
   } else {
     return(p_comb)
   }

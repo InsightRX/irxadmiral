@@ -16,7 +16,6 @@ Imports:
     lubridate,
     admiral,
     ggplot2,
-    patchwork,
     nlmixr2,
     rxode2,
     rlang,
@@ -25,7 +24,9 @@ Imports:
     tidyselect,
     RPostgres,
     IQnca,
-    PKPDsim
+    PKPDsim,
+    plotly,
+    htmlwidgets
 Suggests:
     fs,
     mockery,
