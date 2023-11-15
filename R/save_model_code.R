@@ -12,7 +12,7 @@ save_model_code <- function(
   ## Works for nlmixr2 models. Will need to adapt for NONMEM models
   md <- paste(
     "```",
-    paste0(attr(model, "srcref"), collapse = "\n"),
+    paste0(capture.output(dput(model)), collapse = "\n"),
     "```",
     sep = "\n"
   )
