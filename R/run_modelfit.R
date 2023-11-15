@@ -49,6 +49,9 @@ run_modelfit <- function(
   ## save fit object to file
   saveRDS(fit, path)
   
+  ## save model to markdown file
+  save_model_code(model, path)
+  
   return(fit)
   
 }
