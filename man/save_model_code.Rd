@@ -9,7 +9,7 @@ save_model_code(model, path)
 \arguments{
 \item{model}{nlmixr2 model object}
 
-\item{path}{path to .rds file for fit. Will change extension to .md}
+\item{path}{path to .md file to save model code to}
 }
 \description{
 Save model code to a markdown file

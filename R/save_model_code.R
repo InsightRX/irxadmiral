@@ -1,7 +1,7 @@
 #' Save model code to a markdown file
 #' 
 #' @param model nlmixr2 model object
-#' @param path path to .rds file for fit. Will change extension to .md
+#' @param path path to .md file to save model code to
 #' 
 #' @export
 save_model_code <- function(
@@ -17,6 +17,5 @@ save_model_code <- function(
     sep = "\n"
   )
 
-  md_path <- stringr::str_replace(path, "\\.rds", ".md")
-  writeLines(md, md_path)
+  writeLines(md, path)
 }
