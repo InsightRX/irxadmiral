@@ -24,11 +24,13 @@ create_model <- function(
 ) {
 
   ## parse arguments
-  route <- match.arg(route)
   absorption <- match.arg(absorption)
   software <- match.arg(software)
   if(is.null(route)) {
     route <- get_route_from_data(data$ROUTE)
+  }
+  if(route %in% c("iv", "oral")) {
+    stop("Only `iv` and `oral` supported currently as `route`.")
   }
 
   if(tolower(software) %in% c("nlmixr", "nlmixr2")) {
