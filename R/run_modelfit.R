@@ -49,6 +49,10 @@ run_modelfit <- function(
   ## save fit object to file
   saveRDS(fit, path)
   
+  ## save model to markdown file
+  md_path <- stringr::str_replace(path, "\\.rds", ".md")
+  save_model_code(model, md_path)
+  
   return(fit)
   
 }
