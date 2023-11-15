@@ -11,8 +11,12 @@ save_model_code <- function(
   
   ## Works for nlmixr2 models. Will need to adapt for NONMEM models
   md <- paste(
+    "## Model code",
+    "",
+    "The following nlmixr2 model code was used in the compartmental analysis: ",
+    "",
     "```",
-    paste0(attr(model, "srcref"), collapse = "\n"),
+    paste0(capture.output(dput(model)), collapse = "\n"),
     "```",
     sep = "\n"
   )
