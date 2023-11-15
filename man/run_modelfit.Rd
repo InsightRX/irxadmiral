@@ -4,19 +4,16 @@
 \alias{run_modelfit}
 \title{Run a modelfit}
 \usage{
-run_modelfit(data, n_cmt = 1, route = NULL, path)
+run_modelfit(data, path, ...)
 }
 \arguments{
 \item{data}{dataset in NONMEM-style format, preferrably created using
 \code{create_modelfit_data()}.}
 
-\item{n_cmt}{number of compartments for the population PK model}
-
-\item{route}{administration route, either \code{"oral"} or \code{"iv"} or NULL. If NULL
-(default) will read from data (\code{ROUTE} column) and used route specified for
-first dose in dataset.}
-
 \item{path}{path to file to store output object from fit.}
+
+\item{...}{arguments passed to \code{create_model()} function. See
+available arguments to that function.}
 }
 \description{
 This function fits a population PK model to a population PK dataset
@@ -28,8 +25,9 @@ rds file, and not be returned.
 
 run_modelfit(
   data = data,
-  cmt = 1, 
+  n_cmt = 1, 
   route = "oral",
+  absorption = "linear",
   path = "./outputs/fit.rds"
 )
 }

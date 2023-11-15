@@ -2,10 +2,10 @@
 % Please edit documentation in R/nlmixr2_models.R
 \name{nlmixr2_pk_1cmt_iv_linear}
 \alias{nlmixr2_pk_1cmt_iv_linear}
-\title{nlmixr2 model: 1-cmt linear model (iv)}
+\title{nlmixr2 model: 2-cmt linear model (iv)}
 \usage{
 nlmixr2_pk_1cmt_iv_linear()
 }
 \description{
-nlmixr2 model: 1-cmt linear model (iv)
+nlmixr2 model: 2-cmt linear model (iv)
 }
