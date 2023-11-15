@@ -29,7 +29,7 @@ create_model <- function(
   if(is.null(route)) {
     route <- get_route_from_data(data$ROUTE)
   }
-  if(route %in% c("iv", "oral")) {
+  if(!isTRUE(route %in% c("iv", "oral"))) {
     stop("Only `iv` and `oral` supported currently as `route`.")
   }
 
