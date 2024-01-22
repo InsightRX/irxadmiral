@@ -8,6 +8,10 @@
 #' @param cutoff cutoff value for deciding between continuous/categorical
 #' 
 is_continuous <- function(x, cutoff = 0.8) {
+  if (cutoff > 1) {
+    warning("Can't have a cutoff greater than 1; setting value to 1 instead")
+    cutoff <- 1
+  }
   suppressWarnings(
     tmp <- as.numeric(as.character(x))
   )
