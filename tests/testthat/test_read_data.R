@@ -41,5 +41,22 @@ test_that("read_data_db errors if can't find tables", {
   )
 })
 
+test_that("read_data looks for files if db is null", {
+  tmppath <- fs::file_temp()
+  local_create_data_dir(tmppath)
+  dat <- read_data(tables = "mtcars", db = NULL, path = tmppath)
+  expect_named(dat, "mtcars")
+  expect_true(is.data.frame(dat[["mtcars"]]))
+})
+
+test_that("read_data looks in DB if db arg is provided", {
+  db_file <- fs::file_temp()
+  withr::defer(unlink(db_file))
+  local_create_sqlite_db(db = db_file)
+  local_mocked_bindings(
+    create_db_connection = function(...) DBI::dbConnect(RSQLite::SQLite(), db_file)
   )
+  dat <- read_data("mtcars", db = list())
+  expect_named(dat, "mtcars")
+  expect_true(is.data.frame(dat[["mtcars"]]))
 })
