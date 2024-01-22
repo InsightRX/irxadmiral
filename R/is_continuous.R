@@ -15,5 +15,7 @@ is_continuous <- function(x, cutoff = 0.8) {
   suppressWarnings(
     tmp <- as.numeric(as.character(x))
   )
-  sum(!is.na(tmp)) / length(tmp) >= cutoff
+
+  # Are number of *new* NAs/total number of values <= 1 - cutoff
+  ((sum(is.na(tmp)) - sum(is.na(x))) / length(tmp)) <= (1 - cutoff)
 }
