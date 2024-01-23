@@ -17,9 +17,7 @@ create_demographics_table <- function(
     group = NULL,
     path = NULL
 ) {
-  
-  ## TODO: this function will really benefit from unit tests!
-  
+
   demographics <- tolower(demographics)
   
   ## figure out what is in demographics and what is in vitals
