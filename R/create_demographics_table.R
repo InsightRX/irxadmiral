@@ -23,10 +23,15 @@ create_demographics_table <- function(
   demographics <- tolower(demographics)
   
   ## figure out what is in demographics and what is in vitals
-  vs_available <- data$vs %>% 
-    stats::setNames(tolower(names(.))) %>%
-    .$vstest %>% unique() %>% tolower()
-  vs_demographics <- intersect(demographics, vs_available)
+  if (is.null(data$vs)) {
+    vs_demographics <- NULL
+  } else {
+    vs_available <- data$vs %>%
+      stats::setNames(tolower(names(.))) %>%
+      .$vstest %>% unique() %>% tolower()
+    vs_demographics <- intersect(demographics, vs_available)
+  }
+
   dm_possible <- c(
     "age", "sex", "race", "ethnic", "arm", "actarm", "country", "siteid",
     "studyid", "domain", "armcd"
@@ -37,16 +42,18 @@ create_demographics_table <- function(
   dm_demographics <- intersect(demographics, dm_available)
   
   ## get data not in DM table
-  vitals <- data$vs %>% 
-    stats::setNames(tolower(names(.))) %>%
-    dplyr::mutate(vstest = tolower(vstest)) %>%
-    dplyr::filter(vstest %in% tolower(vs_demographics)) %>%
-    dplyr::group_by(usubjid) %>%
-    dplyr::filter(!duplicated(vstest)) %>%
-    dplyr::select(usubjid, name = vstest, value = vsstresc) %>%
-    tidyr::pivot_wider() %>%
-    stats::setNames(tolower(names(.)))
-  
+  if (!is.null(data$vs)) {
+    vitals <- data$vs %>%
+      stats::setNames(tolower(names(.))) %>%
+      dplyr::mutate(vstest = tolower(vstest)) %>%
+      dplyr::filter(vstest %in% tolower(vs_demographics)) %>%
+      dplyr::group_by(usubjid) %>%
+      dplyr::filter(!duplicated(vstest)) %>%
+      dplyr::select(usubjid, name = vstest, value = vsstresc) %>%
+      tidyr::pivot_wider() %>%
+      stats::setNames(tolower(names(.)))
+  }
+
   ## merge into with DM table  
   demographics_found <- c(vs_demographics, dm_demographics)
   if(length(demographics_found) == 0) {
