@@ -16,7 +16,7 @@ save_model_code <- function(
     "The following nlmixr2 model code was used in the compartmental analysis: ",
     "",
     "```",
-    paste0(capture.output(dput(model)), collapse = "\n"),
+    paste0(utils::capture.output(dput(model)), collapse = "\n"),
     "```",
     sep = "\n"
   )
