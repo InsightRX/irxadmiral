@@ -53,7 +53,7 @@ create_demographics_table <- function(
     stop("Couldn't find any requested demographic")
   }
   if(length(vs_demographics) == 0) {
-    demo <- data$dm
+    demo <- stats::setNames(data$dm, tolower(names(data$dm)))
   } else {
     if(length(dm_demographics) == 0) {
       demo <- vitals
