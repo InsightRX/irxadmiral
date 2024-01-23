@@ -79,11 +79,11 @@ create_demographics_table <- function(
   cont_data <- NULL
   if(length(continuous) > 0) {
     cont_data <- demo %>%
-      dplyr::select(continuous) %>%
+      dplyr::select(tidyselect::all_of(continuous)) %>%
       dplyr::mutate(
         dplyr::across(!!continuous, ~ as.numeric(as.character(.x)))
       ) %>%
-      tidyr::pivot_longer(cols = continuous) %>%
+      tidyr::pivot_longer(cols = tidyselect::all_of(continuous)) %>%
       dplyr::group_by(c(name, !!group)) %>%
       dplyr::summarise(
         mean = mean(value, na.rm = TRUE),
