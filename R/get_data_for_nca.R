@@ -6,7 +6,7 @@
 #' @param path optional. If no `db` specified, will read tables from xpt
 #' files in folder `path`.
 #' 
-#' @returns data.frame
+#' @return data.frame
 #'
 #' @export
 #' 

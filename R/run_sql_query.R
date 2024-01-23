@@ -17,7 +17,7 @@
 #' ex <- run_sql_query(db, "SELECT * FROM ex")
 #' }
 #' 
-#' @returns results from query as data.frame
+#' @return results from query as data.frame
 #' 
 #' @export
 #' 

@@ -1,6 +1,6 @@
 #' Parse data into dataset for NCA
 #' 
-#' @returns data.frame with data for IQNCA package
+#' @return data.frame with data for IQNCA package
 #' 
 #' @param data list containing SDTM tables as data.frames
 #' 

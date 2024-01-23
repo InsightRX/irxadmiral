@@ -6,7 +6,7 @@
 #' @param x vector of routes, e.g. from EXROUTE columns in EX dataset,
 #' or ROUTE column in output dataset from `get_data_for_modeling()`. 
 #' 
-#' @returns route (character), either "iv", "oral", "sc", or "im"
+#' @return route (character), either "iv", "oral", "sc", or "im"
 #' 
 #' @export
 #' 
