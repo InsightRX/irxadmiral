@@ -19,6 +19,7 @@ results from query as data.frame
 Based on provided database connection info and query statement.
 }
 \examples{
+\dontrun{
 db <- list(
   host = "test",
   dbname = "postgres",
@@ -27,5 +28,6 @@ db <- list(
   port = 5432
 )
 ex <- run_sql_query(db, "SELECT * FROM ex")
+}
 
 }

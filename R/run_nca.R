@@ -12,12 +12,13 @@
 #' @export
 #' 
 #' @examples
-#' 
+#' \dontrun{
 #' run_nca(
 #'   data = data,
 #'   path = "./outputs/nca.rds"
 #' )
-#' 
+#' }
+
 run_nca <- function(
   data,
   path

@@ -15,7 +15,7 @@
 #' @export
 #' 
 #' @examples
-#' 
+#' \dontrun{
 #' run_modelfit(
 #'   data = data,
 #'   n_cmt = 1, 
@@ -23,7 +23,7 @@
 #'   absorption = "linear",
 #'   path = "./outputs/fit.rds"
 #' )
-
+#' }
 run_modelfit <- function(
   data,
   path,
