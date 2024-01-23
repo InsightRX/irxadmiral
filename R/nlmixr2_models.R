@@ -3,7 +3,7 @@
 #' 
 #' @export
 nlmixr2_pk_1cmt_oral_linear <- function() {
-  ini({
+  rxode2::ini({
     tka     <- log(0.25)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -12,7 +12,7 @@ nlmixr2_pk_1cmt_oral_linear <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  model({
+  rxode2::model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -29,7 +29,7 @@ nlmixr2_pk_1cmt_oral_linear <- function() {
 #' 
 #' @export
 nlmixr2_pk_1cmt_oral_linear_lag <- function() {
-  ini({
+  rxode2::ini({
     tka     <- log(0.25)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -39,7 +39,7 @@ nlmixr2_pk_1cmt_oral_linear_lag <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  model({
+  rxode2::model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -56,7 +56,7 @@ nlmixr2_pk_1cmt_oral_linear_lag <- function() {
 #' 
 #' @export
 nlmixr2_pk_1cmt_oral_linear_transit <- function() {
-  ini({
+  rxode2::ini({
     tka     <- log(0.25)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -67,7 +67,7 @@ nlmixr2_pk_1cmt_oral_linear_transit <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  model({
+  rxode2::model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -85,14 +85,14 @@ nlmixr2_pk_1cmt_oral_linear_transit <- function() {
 #' 
 #' @export
 nlmixr2_pk_1cmt_iv_linear <- function() {
-  ini({
+  rxode2::ini({
     tCL     <- log(5) 
     tV      <- log(50)
     eta_CL   ~ 0.3
     eta_V    ~ 0.3
     prop_sd <- 0.15
   })
-  model({
+  rxode2::model({
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
     # d/dt(A1) = -Ka*A1
@@ -111,7 +111,7 @@ nlmixr2_pk_1cmt_iv_linear <- function() {
 #' 
 #' @export
 nlmixr2_pk_2cmt_oral_linear <- function() {
-  ini({
+  rxode2::ini({
     tka     <- log(0.5)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -124,7 +124,7 @@ nlmixr2_pk_2cmt_oral_linear <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  model({
+  rxode2::model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -143,7 +143,7 @@ nlmixr2_pk_2cmt_oral_linear <- function() {
 #' 
 #' @export
 nlmixr2_pk_2cmt_oral_linear_lag <- function() {
-  ini({
+  rxode2::ini({
     tka     <- log(0.5)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -157,7 +157,7 @@ nlmixr2_pk_2cmt_oral_linear_lag <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  model({
+  rxode2::model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -177,7 +177,7 @@ nlmixr2_pk_2cmt_oral_linear_lag <- function() {
 #' 
 #' @export
 nlmixr2_pk_2cmt_oral_linear_transit <- function() {
-  ini({
+  rxode2::ini({
     tka     <- log(0.5)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -192,7 +192,7 @@ nlmixr2_pk_2cmt_oral_linear_transit <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  model({
+  rxode2::model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -213,7 +213,7 @@ nlmixr2_pk_2cmt_oral_linear_transit <- function() {
 #' 
 #' @export
 nlmixr2_pk_2cmt_iv_linear <- function() {
-  ini({
+  rxode2::ini({
     tCL     <- log(5) 
     tV      <- log(50)
     tQ      <- log(10) 
@@ -224,7 +224,7 @@ nlmixr2_pk_2cmt_iv_linear <- function() {
     eta_V2   ~ 0.3
     prop_sd <- 0.15
   })
-  model({
+  rxode2::model({
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
     Q  <- exp(tQ  + eta_Q)
@@ -236,3 +236,23 @@ nlmixr2_pk_2cmt_iv_linear <- function() {
     linCmt() ~ prop(prop_sd)
   })
 }
+
+# R CMD check gets confused about the rxode2 syntax, this is to suppress R CMD
+# check NOTEs about "no visible binding for global variable"
+utils::globalVariables(
+  c(
+    "eta_CL",
+    "eta_V",
+    "eta_V2",
+    "eta_ka",
+    "eta_Q",
+    "dt",
+    "A1",
+    "A2",
+    "A3",
+    "/<-",
+    "lag<-",
+    "transit",
+    "." # silence note from functions with dplyr chains that use .
+  )
+)

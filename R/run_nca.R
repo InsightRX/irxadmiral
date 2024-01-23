@@ -27,9 +27,18 @@ run_nca <- function(
   nca <- IQnca::IQdataNCA(data) %>% # creates NCA object and fits linear model to terminal data
     IQnca::nca_IQdataNCA() %>%  # calculates the actual NCA parameters
     dplyr::select(
-      USUBJID, ACTARM, 
-      CMAX, TMAX, TLAG, AUCMETHD, AUCALL, LAMZHL, 
-      AUCLST, CLST, LAMZ, LAMZNPT
+      "USUBJID",
+      "ACTARM",
+      "CMAX",
+      "TMAX",
+      "TLAG",
+      "AUCMETHD",
+      "AUCALL",
+      "LAMZHL",
+      "AUCLST",
+      "CLST",
+      "LAMZ",
+      "LAMZNPT"
     ) %>%
     data.frame()
   

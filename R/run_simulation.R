@@ -71,8 +71,8 @@ run_simulation <- function(
         ...
       ) %>%
         dplyr::rename(
-          y = ipredSim,
-          id = sim.id
+          y = "ipredSim",
+          id = "sim.id"
         ) %>%
         dplyr::mutate(
           scenario = paste0("Scenario ", i, ": ", dose[i], " mg / ", interval[i], " hrs"), 
@@ -97,19 +97,19 @@ run_simulation <- function(
   }
   if(!is.null(group)) {
     dat <- dat %>%
-      dplyr::group_by(all_of(group))
+      dplyr::group_by(tidyselect::all_of(group))
   }
   if(aggregate) {
     dat <- dat %>%
-      dplyr::group_by(time, scenario, .add = TRUE) %>%
+      dplyr::group_by(.data$time, .data$scenario, .add = TRUE) %>%
       dplyr::summarise(
         dose = dose[1],
         interval = interval[1],
-        mean = mean(y),
-        median = stats::median(y),
-        q_5 = stats::quantile(y, .05),
-        q_95 = stats::quantile(y, .95),
-        sd = stats::sd(y)
+        mean = mean(.data$y),
+        median = stats::median(.data$y),
+        q_5 = stats::quantile(.data$y, .05),
+        q_95 = stats::quantile(.data$y, .95),
+        sd = stats::sd(.data$y)
       )
   }
   
