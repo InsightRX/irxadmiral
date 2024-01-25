@@ -29,8 +29,9 @@ Imports:
     htmlwidgets
 Suggests:
     fs,
+    nlmixr2data,
     RSQLite,
-    testthat (>= 3.0.0),
+    testthat (>= 3.2.0),
     withr
 Additional_repositories: https://iqnca.intiquan.com/rrepo
 License: file LICENSE

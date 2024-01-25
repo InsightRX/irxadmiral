@@ -17,16 +17,19 @@ create_demographics_table <- function(
     group = NULL,
     path = NULL
 ) {
-  
-  ## TODO: this function will really benefit from unit tests!
-  
+
   demographics <- tolower(demographics)
   
   ## figure out what is in demographics and what is in vitals
-  vs_available <- data$vs %>% 
-    stats::setNames(tolower(names(.))) %>%
-    .$vstest %>% unique() %>% tolower()
-  vs_demographics <- intersect(demographics, vs_available)
+  if (is.null(data$vs)) {
+    vs_demographics <- NULL
+  } else {
+    vs_available <- data$vs %>%
+      stats::setNames(tolower(names(.))) %>%
+      .$vstest %>% unique() %>% tolower()
+    vs_demographics <- intersect(demographics, vs_available)
+  }
+
   dm_possible <- c(
     "age", "sex", "race", "ethnic", "arm", "actarm", "country", "siteid",
     "studyid", "domain", "armcd"
@@ -37,23 +40,25 @@ create_demographics_table <- function(
   dm_demographics <- intersect(demographics, dm_available)
   
   ## get data not in DM table
-  vitals <- data$vs %>% 
-    stats::setNames(tolower(names(.))) %>%
-    dplyr::mutate(vstest = tolower(vstest)) %>%
-    dplyr::filter(vstest %in% tolower(vs_demographics)) %>%
-    dplyr::group_by(usubjid) %>%
-    dplyr::filter(!duplicated(vstest)) %>%
-    dplyr::select(usubjid, name = vstest, value = vsstresc) %>%
-    tidyr::pivot_wider() %>%
-    stats::setNames(tolower(names(.)))
-  
+  if (!is.null(data$vs)) {
+    vitals <- data$vs %>%
+      stats::setNames(tolower(names(.))) %>%
+      dplyr::mutate(vstest = tolower(vstest)) %>%
+      dplyr::filter(vstest %in% tolower(vs_demographics)) %>%
+      dplyr::group_by(usubjid) %>%
+      dplyr::filter(!duplicated(vstest)) %>%
+      dplyr::select(usubjid, name = vstest, value = vsstresc) %>%
+      tidyr::pivot_wider() %>%
+      stats::setNames(tolower(names(.)))
+  }
+
   ## merge into with DM table  
   demographics_found <- c(vs_demographics, dm_demographics)
   if(length(demographics_found) == 0) {
     stop("Couldn't find any requested demographic")
   }
   if(length(vs_demographics) == 0) {
-    demo <- data$dm
+    demo <- stats::setNames(data$dm, tolower(names(data$dm)))
   } else {
     if(length(dm_demographics) == 0) {
       demo <- vitals
@@ -79,11 +84,11 @@ create_demographics_table <- function(
   cont_data <- NULL
   if(length(continuous) > 0) {
     cont_data <- demo %>%
-      dplyr::select(continuous) %>%
+      dplyr::select(tidyselect::all_of(continuous)) %>%
       dplyr::mutate(
         dplyr::across(!!continuous, ~ as.numeric(as.character(.x)))
       ) %>%
-      tidyr::pivot_longer(cols = continuous) %>%
+      tidyr::pivot_longer(cols = tidyselect::all_of(continuous)) %>%
       dplyr::group_by(c(name, !!group)) %>%
       dplyr::summarise(
         mean = mean(value, na.rm = TRUE),
