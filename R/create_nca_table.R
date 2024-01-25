@@ -57,7 +57,7 @@ create_nca_table <- function(
       tidyr::pivot_longer(cols = c(mean:max))
     if(!is.null(group)) {
       nca_table <- nca_table %>%
-        tidyr::pivot_wider(names_from = group)
+        tidyr::pivot_wider(names_from = tidyselect::all_of(group))
     }
     nca_table <- nca_table %>%
       dplyr::rename(Statistic = name) %>%
