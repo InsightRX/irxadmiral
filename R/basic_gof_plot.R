@@ -26,7 +26,7 @@ basic_gof_plot <- function(
       ggplot2::geom_point(alpha = 0.5) +
       ggplot2::facet_wrap(~name) +
       ggplot2::geom_abline(intercept = 0, slope = 1) +
-      ggplot2::geom_smooth(method = "lm") +
+      ggplot2::geom_smooth(method = "lm", formula = y ~ x) +
       ggplot2::xlab("") +
       ggplot2::ylab("observed")
   p1 <- plotly::ggplotly(p1)
@@ -35,7 +35,7 @@ basic_gof_plot <- function(
     ggplot2::ggplot(ggplot2::aes(x = value, y = NPDE)) +
       ggplot2::geom_point(alpha = 0.5) +
       ggplot2::facet_wrap(~name, scales = "free") +
-      ggplot2::geom_smooth(method = "lm") +
+      ggplot2::geom_smooth(method = "lm", formula = y ~ x) +
       ggplot2::xlab("") +
       ggplot2::ylab("NPDE")
   p2 <- plotly::ggplotly(p2)

@@ -30,6 +30,7 @@ Imports:
 Suggests:
     fs,
     mockery,
+    nlmixr2data,
     testthat (>= 3.0.0),
     withr
 Additional_repositories: https://iqnca.intiquan.com/rrepo
