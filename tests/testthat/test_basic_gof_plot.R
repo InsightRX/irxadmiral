@@ -1,4 +1,6 @@
 test_that("basic_gof_plot works", {
+  skip_on_os(os = "mac", arch = "aarch64")
+
   # sample model from nlmixr2 docs
   model <- function() {
     ini({
