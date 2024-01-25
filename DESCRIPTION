@@ -29,8 +29,8 @@ Imports:
     htmlwidgets
 Suggests:
     fs,
-    mockery,
     nlmixr2data,
+    RSQLite,
     testthat (>= 3.0.0),
     withr
 Additional_repositories: https://iqnca.intiquan.com/rrepo

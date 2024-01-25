@@ -8,8 +8,14 @@
 #' @param cutoff cutoff value for deciding between continuous/categorical
 #' 
 is_continuous <- function(x, cutoff = 0.8) {
+  if (cutoff > 1) {
+    warning("Can't have a cutoff greater than 1; setting value to 1 instead")
+    cutoff <- 1
+  }
   suppressWarnings(
     tmp <- as.numeric(as.character(x))
   )
-  sum(!is.na(tmp)) / length(tmp) > cutoff
+
+  # Are number of *new* NAs/total number of values <= 1 - cutoff
+  ((sum(is.na(tmp)) - sum(is.na(x))) / length(tmp)) %<=% (1 - cutoff)
 }
