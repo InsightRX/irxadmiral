@@ -36,9 +36,9 @@ run_simulation <- function(
     stop("Length of `dose` vector needs to match length of `interval` vector.")
   }
   if(!bsv) {
-    omega <- fit$omega * 1e-6 # cannot be NULL or matrix of 0s
+    omega <- obj$omega * 1e-6 # cannot be NULL or matrix of 0s
   } else {
-    omega <- fit$omega
+    omega <- obj$omega
   }
   if(is.null(n_doses) && is.null(n_days)) {
     stop("Either `n_doses` or `n_days` need to be specified.")
@@ -61,7 +61,7 @@ run_simulation <- function(
     dat <- dplyr::bind_rows(
       dat,
       rxode2::rxSolve(
-        object = fit,
+        object = obj,
         omega = omega,
         events = ev,
         nsim =  n_subjects,
@@ -85,7 +85,7 @@ run_simulation <- function(
   ## add residual error
   prop_sd <- 0
   add_sd <- 0
-  pars <- as.list(fit$fixef)
+  pars <- as.list(obj$fixef)
   if("prop_sd" %in% names(pars)) {
     prop_sd <- pars$prop_sd
   }
