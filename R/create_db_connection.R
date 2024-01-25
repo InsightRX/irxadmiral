@@ -1,5 +1,6 @@
 #' Create connection to a postgres database
-#' 
+#'
+#' @importFrom RPostgres Postgres
 #' @param db list containing database connection details. Requires `host`, 
 #' `dbname`, `user`, `password`, and `port`
 #' 
@@ -19,7 +20,7 @@ create_db_connection <- function(
   
   ## make connection and return
   DBI::dbConnect(
-    RPostgres::Postgres(), 
+    Postgres(),
     host = db$host, 
     dbname = db$dbname, 
     user = db$user, 

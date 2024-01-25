@@ -12,7 +12,7 @@ read_data(tables, db = NULL, path = NULL)
 \item{db}{list with db connection information. If NULL, will try to read
 same data from xpt files in \code{path}}
 
-\item{path}{optional. If no \code{db} specified, will read tables from xpt
+\item{path}{optional. If \code{db} is NULL, will read tables from xpt
 files in folder \code{path}.}
 }
 \value{

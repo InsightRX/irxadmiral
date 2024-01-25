@@ -3,7 +3,7 @@
 #' @param tables Character vector of tables to read
 #' @param db list with db connection information. If NULL, will try to read
 #' same data from xpt files in `path`
-#' @param path optional. If no `db` specified, will read tables from xpt
+#' @param path optional. If `db` is NULL, will read tables from xpt
 #' files in folder `path`.
 #' 
 #' @return List containing each table as a data frame
