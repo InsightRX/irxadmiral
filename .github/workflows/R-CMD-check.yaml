@@ -18,6 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Add specific package manager snapshot
+        run: |
+          cat("\noptions(repos = c(CRAN = 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-10-17', IQNCA = 'https://iqnca.intiquan.com/rrepo'))\n", file = "~/.Rprofile", append = TRUE)
+        shell: Rscript {0}
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
