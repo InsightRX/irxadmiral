@@ -22,7 +22,7 @@ jobs:
           r-version: '4.3.1'
 
       - name: Install IQnca # pak fails to install it, but install.packages can
-        run: install.packages('IQnca', repos = 'https://iqnca.intiquan.com/rrepo')
+        run: install.packages('IQnca', repos = c('https://iqnca.intiquan.com/rrepo', 'https://cran.r-project.org'))
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
