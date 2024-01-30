@@ -1,9 +1,10 @@
 #' nlmixr2 model: 1-cmt linear model (oral)
 #' Linear absorption without lagtime
-#' 
+#'
+#' @importFrom rxode2 ini model
 #' @export
 nlmixr2_pk_1cmt_oral_linear <- function() {
-  rxode2::ini({
+  ini({
     tka     <- log(0.25)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -12,7 +13,7 @@ nlmixr2_pk_1cmt_oral_linear <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  rxode2::model({
+  model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -29,7 +30,7 @@ nlmixr2_pk_1cmt_oral_linear <- function() {
 #' 
 #' @export
 nlmixr2_pk_1cmt_oral_linear_lag <- function() {
-  rxode2::ini({
+  ini({
     tka     <- log(0.25)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -39,7 +40,7 @@ nlmixr2_pk_1cmt_oral_linear_lag <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  rxode2::model({
+  model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -56,7 +57,7 @@ nlmixr2_pk_1cmt_oral_linear_lag <- function() {
 #' 
 #' @export
 nlmixr2_pk_1cmt_oral_linear_transit <- function() {
-  rxode2::ini({
+  ini({
     tka     <- log(0.25)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -67,7 +68,7 @@ nlmixr2_pk_1cmt_oral_linear_transit <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  rxode2::model({
+  model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -85,14 +86,14 @@ nlmixr2_pk_1cmt_oral_linear_transit <- function() {
 #' 
 #' @export
 nlmixr2_pk_1cmt_iv_linear <- function() {
-  rxode2::ini({
+  ini({
     tCL     <- log(5) 
     tV      <- log(50)
     eta_CL   ~ 0.3
     eta_V    ~ 0.3
     prop_sd <- 0.15
   })
-  rxode2::model({
+  model({
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
     # d/dt(A1) = -Ka*A1
@@ -111,7 +112,7 @@ nlmixr2_pk_1cmt_iv_linear <- function() {
 #' 
 #' @export
 nlmixr2_pk_2cmt_oral_linear <- function() {
-  rxode2::ini({
+  ini({
     tka     <- log(0.5)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -124,7 +125,7 @@ nlmixr2_pk_2cmt_oral_linear <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  rxode2::model({
+  model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -143,7 +144,7 @@ nlmixr2_pk_2cmt_oral_linear <- function() {
 #' 
 #' @export
 nlmixr2_pk_2cmt_oral_linear_lag <- function() {
-  rxode2::ini({
+  ini({
     tka     <- log(0.5)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -157,7 +158,7 @@ nlmixr2_pk_2cmt_oral_linear_lag <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  rxode2::model({
+  model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -177,7 +178,7 @@ nlmixr2_pk_2cmt_oral_linear_lag <- function() {
 #' 
 #' @export
 nlmixr2_pk_2cmt_oral_linear_transit <- function() {
-  rxode2::ini({
+  ini({
     tka     <- log(0.5)
     tCL     <- log(5) 
     tV      <- log(50)
@@ -192,7 +193,7 @@ nlmixr2_pk_2cmt_oral_linear_transit <- function() {
     eta_ka   ~ 0.3
     prop_sd <- 0.15
   })
-  rxode2::model({
+  model({
     ka <- exp(tka + eta_ka)
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
@@ -213,7 +214,7 @@ nlmixr2_pk_2cmt_oral_linear_transit <- function() {
 #' 
 #' @export
 nlmixr2_pk_2cmt_iv_linear <- function() {
-  rxode2::ini({
+  ini({
     tCL     <- log(5) 
     tV      <- log(50)
     tQ      <- log(10) 
@@ -224,7 +225,7 @@ nlmixr2_pk_2cmt_iv_linear <- function() {
     eta_V2   ~ 0.3
     prop_sd <- 0.15
   })
-  rxode2::model({
+  model({
     CL <- exp(tCL + eta_CL)
     V  <- exp(tV  + eta_V)
     Q  <- exp(tQ  + eta_Q)
