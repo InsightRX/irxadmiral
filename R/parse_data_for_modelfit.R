@@ -202,7 +202,7 @@
 #'     limitations under the License.
 #'
 #' 
-#' @return data.frame with population PK input data in NONMEM-style
+#' @returns data.frame with population PK input data in NONMEM-style
 #' format. It will also add the non-standard columns ROUTE ("oral", "iv") and 
 #' FORM (formulation: "tablet", "suspension", "patch", "infusion", etc.) with 
 #' values for each dose and NA for observations.

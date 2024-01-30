@@ -6,7 +6,7 @@
 #' @param path optional. If no `db` specified, will read tables from xpt
 #' files in folder `path`.
 #' 
-#' @return NONMEM style dataset as data.frame
+#' @returns NONMEM style dataset as data.frame
 #'
 #' @export
 #' 

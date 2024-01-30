@@ -4,7 +4,7 @@
 #' @param db list containing database connection details. Requires `host`, 
 #' `dbname`, `user`, `password`, and `port`
 #' 
-#' @return db connection object
+#' @returns db connection object
 #' 
 #' @export
 #' 
