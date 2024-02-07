@@ -32,34 +32,34 @@ parse_data_for_nca <- function(data) {
     merge(
       data$dm %>% # join with study-arm data
       stats::setNames(toupper(names(.))) %>%
-      dplyr::select(USUBJID, ACTARM), 
+      dplyr::select("USUBJID", "ACTARM"),
       by = "USUBJID"
     ) %>%
     merge(
       data$ex %>%  # join with dose administration data
       stats::setNames(toupper(names(.))) %>%
-      dplyr::select(USUBJID, EXDOSE, EXDOSU, EXROUTE, VISIT, VISITNUM),
+      dplyr::select("USUBJID", "EXDOSE", "EXDOSU", "EXROUTE", "VISIT", "VISITNUM"),
       by = c("USUBJID", "VISITNUM")
     ) %>%
-    dplyr::filter(!ACTARM %in% remove_cohorts) 
+    dplyr::filter(!.data$ACTARM %in% remove_cohorts)
   arms <- unique(merged_data$ACTARM)
   
   nca_data <- merged_data %>%
     dplyr::mutate(
-      ANALYTE = PCTEST,
-      MATRIX = PCSPEC,
-      COMPOUND = PCTEST,
-      PROFILE = USUBJID,
-      GROUP = ACTARM,
-      GROUPN = match(ACTARM, arms),
-      GROUPU = EXDOSU,
-      ATIME = PCTPTNUM,
-      NTIME = PCTPTNUM,
-      ACONC = PCSTRESC,
-      CONCUNIT = PCSTRESU,
-      LLOQ = PCLLOQ,
-      DOSE = EXDOSE,
-      DOSEUNIT = EXDOSU,
+      ANALYTE = .data$PCTEST,
+      MATRIX = .data$PCSPEC,
+      COMPOUND = .data$PCTEST,
+      PROFILE = .data$USUBJID,
+      GROUP = .data$ACTARM,
+      GROUPN = match(.data$ACTARM, arms),
+      GROUPU = .data$EXDOSU,
+      ATIME = .data$PCTPTNUM,
+      NTIME = .data$PCTPTNUM,
+      ACONC = .data$PCSTRESC,
+      CONCUNIT = .data$PCSTRESU,
+      LLOQ = .data$PCLLOQ,
+      DOSE = .data$EXDOSE,
+      DOSEUNIT = .data$EXDOSU,
       PROFTYPE = md$PROFTYPE, # single dose
       DAY = md$DAY,
       TIMEUNIT = md$TIMEUNIT,

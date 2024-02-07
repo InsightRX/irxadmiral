@@ -36,9 +36,9 @@ run_simulation <- function(
     stop("Length of `dose` vector needs to match length of `interval` vector.")
   }
   if(!bsv) {
-    omega <- fit$omega * 1e-6 # cannot be NULL or matrix of 0s
+    omega <- obj$omega * 1e-6 # cannot be NULL or matrix of 0s
   } else {
-    omega <- fit$omega
+    omega <- obj$omega
   }
   if(is.null(n_doses) && is.null(n_days)) {
     stop("Either `n_doses` or `n_days` need to be specified.")
@@ -61,7 +61,7 @@ run_simulation <- function(
     dat <- dplyr::bind_rows(
       dat,
       rxode2::rxSolve(
-        object = fit,
+        object = obj,
         omega = omega,
         events = ev,
         nsim =  n_subjects,
@@ -71,8 +71,8 @@ run_simulation <- function(
         ...
       ) %>%
         dplyr::rename(
-          y = ipredSim,
-          id = sim.id
+          y = "ipredSim",
+          id = "sim.id"
         ) %>%
         dplyr::mutate(
           scenario = paste0("Scenario ", i, ": ", dose[i], " mg / ", interval[i], " hrs"), 
@@ -85,7 +85,7 @@ run_simulation <- function(
   ## add residual error
   prop_sd <- 0
   add_sd <- 0
-  pars <- as.list(fit$fixef)
+  pars <- as.list(obj$fixef)
   if("prop_sd" %in% names(pars)) {
     prop_sd <- pars$prop_sd
   }
@@ -97,19 +97,19 @@ run_simulation <- function(
   }
   if(!is.null(group)) {
     dat <- dat %>%
-      dplyr::group_by(all_of(group))
+      dplyr::group_by(tidyselect::all_of(group))
   }
   if(aggregate) {
     dat <- dat %>%
-      dplyr::group_by(time, scenario, .add = TRUE) %>%
+      dplyr::group_by(.data$time, .data$scenario, .add = TRUE) %>%
       dplyr::summarise(
         dose = dose[1],
         interval = interval[1],
-        mean = mean(y),
-        median = stats::median(y),
-        q_5 = stats::quantile(y, .05),
-        q_95 = stats::quantile(y, .95),
-        sd = stats::sd(y)
+        mean = mean(.data$y),
+        median = stats::median(.data$y),
+        q_5 = stats::quantile(.data$y, .05),
+        q_95 = stats::quantile(.data$y, .95),
+        sd = stats::sd(.data$y)
       )
   }
   

@@ -31,7 +31,7 @@ create_nca_table <- function(
   }
   tmp <- nca_data %>%
     tidyr::pivot_longer(cols = tidyselect::all_of(parameters)) %>%
-    dplyr::group_by(name, .add = TRUE)
+    dplyr::group_by(.data$name, .add = TRUE)
   if(!is.null(group)) {
     tmp <- tmp %>%
       dplyr::group_by(!! rlang::sym(group), .add = TRUE)
@@ -40,43 +40,43 @@ create_nca_table <- function(
   ## capturing statistics
   nca_table <- tmp %>%
     dplyr::summarise(
-      mean = mean(value, na.rm = TRUE),
-      sd = stats::sd(value, na.rm = TRUE),
-      cv_pct = 100*sd/mean,
-      median = stats::median(value, na.rm = TRUE),
-      min = min(value, na.rm = TRUE),
-      max = max(value, na.rm = TRUE)
+      mean = mean(.data$value, na.rm = TRUE),
+      sd = stats::sd(.data$value, na.rm = TRUE),
+      cv_pct = 100*.data$sd/.data$mean,
+      median = stats::median(.data$value, na.rm = TRUE),
+      min = min(.data$value, na.rm = TRUE),
+      max = max(.data$value, na.rm = TRUE)
     ) %>%
-    dplyr::mutate(across(mean:max, ~ round(.x, 2) )) %>%
-    dplyr::arrange(name) %>%
-    dplyr::rename(Parameter = name)
+    dplyr::mutate(dplyr::across("mean":"max", ~ round(.x, 2) )) %>%
+    dplyr::arrange(.data$name) %>%
+    dplyr::rename(Parameter = "name")
   
   ## grouping and formatting output
   if(format == "long") {
     nca_table <- nca_table %>%
-      tidyr::pivot_longer(cols = c(mean:max))
+      tidyr::pivot_longer(cols = c("mean":"max"))
     if(!is.null(group)) {
       nca_table <- nca_table %>%
         tidyr::pivot_wider(names_from = tidyselect::all_of(group))
     }
     nca_table <- nca_table %>%
-      dplyr::rename(Statistic = name) %>%
-      dplyr::group_by(Parameter)
+      dplyr::rename(Statistic = "name") %>%
+      dplyr::group_by(.data$Parameter)
   } 
   
   ## add description of parameters
   if(description) {
     nca_table <- merge(
       nca_table, 
-      dict %>% dplyr::select(Object, Description),
+      dict %>% dplyr::select("Object", "Description"),
       by.x = "Parameter", by.y = "Object"
     ) %>%
-      dplyr::select(Parameter, Description, !!names(.)) %>%
-      dplyr::mutate(Description = ifelse(duplicated(Description), "", Description))
+      dplyr::select("Parameter", "Description", !!names(.)) %>%
+      dplyr::mutate(Description = ifelse(duplicated(.data$Description), "", .data$Description))
   }
   
   nca_table <- nca_table %>%
-    dplyr::mutate(Parameter = ifelse(duplicated(Parameter), "", Parameter))
+    dplyr::mutate(Parameter = ifelse(duplicated(.data$Parameter), "", .data$Parameter))
     
   ## save to file
   if(!is.null(path)) {

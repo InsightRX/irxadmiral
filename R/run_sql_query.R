@@ -6,6 +6,7 @@
 #' @param query SQL query to run
 #'
 #' @examples
+#' \dontrun{
 #' db <- list(
 #'   host = "test",
 #'   dbname = "postgres",
@@ -14,6 +15,7 @@
 #'   port = 5432
 #' )
 #' ex <- run_sql_query(db, "SELECT * FROM ex")
+#' }
 #' 
 #' @returns results from query as data.frame
 #' 

@@ -18,10 +18,10 @@ using the IQnca package. The NCA output object will be saved to an
 rds file, and not be returned.
 }
 \examples{
-
+\dontrun{
 run_nca(
   data = data,
   path = "./outputs/nca.rds"
 )
-
+}
 }

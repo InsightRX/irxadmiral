@@ -6,5 +6,6 @@
 #' @name irxadmiral-package
 #' 
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 
 NULL

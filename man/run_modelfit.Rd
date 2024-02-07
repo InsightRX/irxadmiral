@@ -22,7 +22,7 @@ nlmixr2 using the SAEM algorithm. The fit object will be saved to an
 rds file, and not be returned.
 }
 \examples{
-
+\dontrun{
 run_modelfit(
   data = data,
   n_cmt = 1, 
@@ -30,4 +30,5 @@ run_modelfit(
   absorption = "linear",
   path = "./outputs/fit.rds"
 )
+}
 }

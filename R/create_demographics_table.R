@@ -43,15 +43,14 @@ create_demographics_table <- function(
   if (!is.null(data$vs)) {
     vitals <- data$vs %>%
       stats::setNames(tolower(names(.))) %>%
-      dplyr::mutate(vstest = tolower(vstest)) %>%
-      dplyr::filter(vstest %in% tolower(vs_demographics)) %>%
-      dplyr::group_by(usubjid) %>%
-      dplyr::filter(!duplicated(vstest)) %>%
-      dplyr::select(usubjid, name = vstest, value = vsstresc) %>%
+      dplyr::mutate(vstest = tolower(.data$vstest)) %>%
+      dplyr::filter(.data$vstest %in% tolower(vs_demographics)) %>%
+      dplyr::group_by(.data$usubjid) %>%
+      dplyr::filter(!duplicated(.data$vstest)) %>%
+      dplyr::select("usubjid", name = "vstest", value = "vsstresc") %>%
       tidyr::pivot_wider() %>%
       stats::setNames(tolower(names(.)))
   }
-
   ## merge into with DM table  
   demographics_found <- c(vs_demographics, dm_demographics)
   if(length(demographics_found) == 0) {
@@ -69,9 +68,9 @@ create_demographics_table <- function(
     }
   }
   demo <- demo %>%
-    dplyr::group_by(usubjid) %>%
+    dplyr::group_by(.data$usubjid) %>%
     dplyr::slice(1) %>% # make sure only 1 row per patient
-    dplyr::select(usubjid, !! demographics_found) %>%
+    dplyr::select("usubjid", !! demographics_found) %>%
     dplyr::ungroup()
 
   ## figure out which is categorical and which is continuous
@@ -89,20 +88,20 @@ create_demographics_table <- function(
         dplyr::across(!!continuous, ~ as.numeric(as.character(.x)))
       ) %>%
       tidyr::pivot_longer(cols = tidyselect::all_of(continuous)) %>%
-      dplyr::group_by(c(name, !!group)) %>%
+      dplyr::group_by(c(.data$name, !!group)) %>%
       dplyr::summarise(
-        mean = mean(value, na.rm = TRUE),
-        sd = stats::sd(value, na.rm = TRUE),
-        median = stats::median(value, na.rm = TRUE),
-        min = min(value, na.rm = TRUE),
-        max = max(value, na.rm = TRUE)
+        mean = mean(.data$value, na.rm = TRUE),
+        sd = stats::sd(.data$value, na.rm = TRUE),
+        median = stats::median(.data$value, na.rm = TRUE),
+        min = min(.data$value, na.rm = TRUE),
+        max = max(.data$value, na.rm = TRUE)
       ) %>%
       dplyr::mutate(
-        dplyr::across(c(mean, sd, median, min, max), ~ as.character(round(.x, 1)))
+        dplyr::across(c("mean", "sd", "median", "min", "max"), ~ as.character(round(.x, 1)))
       ) %>%
-      dplyr::mutate(min_max = paste0(min, " - ", max)) %>%
-      dplyr::select(-min, -max) %>%
-      tidyr::pivot_longer(cols = c(mean, sd, median, min_max)) %>%
+      dplyr::mutate(min_max = paste0(.data$min, " - ", .data$max)) %>%
+      dplyr::select(-"min", -"max") %>%
+      tidyr::pivot_longer(cols = c("mean", "sd", "median", "min_max")) %>%
       stats::setNames(c("Demographic", "Statistic", "Value")) 
   }
   
@@ -117,7 +116,7 @@ create_demographics_table <- function(
         stats::setNames(c("Statistic", "Value", "Demographic"))
     }) %>%
       dplyr::bind_rows() %>%
-      dplyr::select(Demographic, Statistic, Value) %>%
+      dplyr::select("Demographic", "Statistic", "Value") %>%
       dplyr::mutate(
         dplyr::across(!!names(.), ~ as.character(.x))
       ) 
@@ -128,9 +127,9 @@ create_demographics_table <- function(
     cat_data
   ) %>%
     dplyr::mutate(
-      Demographic = ifelse(duplicated(Demographic), "", Demographic)
+      Demographic = ifelse(duplicated(.data$Demographic), "", .data$Demographic)
     ) %>%
-    dplyr::rename("Value/count" = Value)
+    dplyr::rename("Value/count" = "Value")
   
   if(!is.null(path)) {
     utils::write.csv(comb_data, file = path, row.names=F, quote=F)

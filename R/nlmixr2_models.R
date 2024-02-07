@@ -1,6 +1,7 @@
 #' nlmixr2 model: 1-cmt linear model (oral)
 #' Linear absorption without lagtime
-#' 
+#'
+#' @importFrom rxode2 ini model
 #' @export
 nlmixr2_pk_1cmt_oral_linear <- function() {
   ini({
@@ -236,3 +237,23 @@ nlmixr2_pk_2cmt_iv_linear <- function() {
     linCmt() ~ prop(prop_sd)
   })
 }
+
+# R CMD check gets confused about the rxode2 syntax, this is to suppress R CMD
+# check NOTEs about "no visible binding for global variable"
+utils::globalVariables(
+  c(
+    "eta_CL",
+    "eta_V",
+    "eta_V2",
+    "eta_ka",
+    "eta_Q",
+    "dt",
+    "A1",
+    "A2",
+    "A3",
+    "/<-",
+    "lag<-",
+    "transit",
+    "." # silence note from functions with dplyr chains that use .
+  )
+)
